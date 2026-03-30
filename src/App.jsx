@@ -19,8 +19,11 @@ const RegistroOperador2 = lazy(() => import('./RegistroOperador2'));
 const RegistroTurista1 = lazy(() => import('./RegistroTurista1'));
 const RegistroTurista2 = lazy(() => import('./RegistroTurista2'));
 
-// (HU002): Importamos la Colección Ecoturística
+// Lazy loaded pages (HU002: Colección)
 const ColeccionPage = lazy(() => import('./ColeccionPage'));
+
+// 👉 NUEVO (HU003): Importamos el Wizard de Preferencias
+const PreferencesPage = lazy(() => import('./PreferencesPage'));
 
 // Protector para no dejar entrar al login si ya estás logueado
 const GuestRoute = ({ children }) => {
@@ -108,15 +111,26 @@ function AppRoutes() {
           }
         />
         
-        {/* Rutas adicionales de Roles y Pasos de Registro que traíste */}
+        {/* Rutas adicionales de Roles y Pasos de Registro */}
         <Route path="/roles" element={<RolesPage />} />
         <Route path="/registro-operador-1" element={<RegistroOperador1 />} />
         <Route path="/registro-operador-2" element={<RegistroOperador2 />} />
         <Route path="/registro-turista-1" element={<RegistroTurista1 />} />
         <Route path="/registro-turista-2" element={<RegistroTurista2 />} />
 
-        {/* HU002): Ruta pública para acceder a la colección de sitios */}
         <Route path="/coleccion" element={<ColeccionPage />} />
+
+        {/* 👉 NUEVO (HU003): Ruta conectada al registro para Preferencias */}
+        <Route 
+          path="/preferencias" 
+          element={
+            <PreferencesPage 
+              onNavigateHome={() => navigate('/')}
+              onNavigateLogin={() => navigate('/login')}
+              isFirstTime={true}
+            />
+          } 
+        />
 
         {/* Como aún no hemos migrado el HomePage "/", redirigimos a login temporalmente */}
         <Route path="*" element={<Navigate to="/login" replace />} />
@@ -174,7 +188,6 @@ function ScrollReveal() {
   return null;
 }
 
-// Estructura principal exactamente igual a tu original
 function App() {
   return (
     <AuthProvider>
