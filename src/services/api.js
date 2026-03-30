@@ -174,3 +174,15 @@ export async function getCurrentUser() {
   }
 }
 export async function fetchNotifications() { return []; }
+
+/**
+ * Obtener recomendaciones basadas en preferencias del usuario
+ */
+export async function fetchRecommendations() {
+  try {
+    const { data } = await api.get('/api/recommendations');
+    return data;
+  } catch (error) {
+    throw error.response?.data || { message: 'Error obteniendo recomendaciones' };
+  }
+}
