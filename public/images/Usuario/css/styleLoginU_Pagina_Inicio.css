@@ -1,0 +1,1134 @@
+/* propiedades  generales */
+*{
+    margin: 0;
+    font-family: 'Albert Sans', sans-serif;
+}
+
+/* encabezado */
+header{
+    position: fixed;
+    width: 100%;
+    height: 4rem;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    background-color: white;
+    z-index: 9999;
+}
+
+/* logo encabezado */
+#logotipo{
+    width: 10%;
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+    text-decoration: none;
+    align-items: center;
+    margin-left: 3em;
+}
+
+#logotipo a{
+    text-decoration: none;
+    color: black;
+}
+
+#logotipo a:visited{
+    text-decoration: none;
+}
+
+#logotipo a:hover{
+    color: #558a39;
+
+}
+
+#logo{
+    width: 3rem;
+    height: 4rem;
+}
+
+#logotipo h6{
+    color: #5c5959;
+    font-weight: 700;
+    text-align: center;
+}
+
+/* botones interactivos/parte derecha del encabezado*/
+
+#parte_derecha{
+    display: flex;
+    align-items: center;
+    width: auto;
+    height: 100%;
+    flex-direction: row;
+    gap: 1.8em;
+    margin-right: 3em;
+}
+
+/* barra de busqueda */
+
+#buscador{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 0.5em;
+}
+
+/* parrafos */
+#buscador p{
+    font-size: 16px;
+    font-weight: 400;
+}
+
+#buscar{
+    width: 1.8em;
+    height: 1.5em;
+    margin-right: -5px;
+    
+}
+
+#buscador:hover{
+    cursor: pointer;
+}
+
+/* dropdown busqueda */
+
+#search{
+
+    width: 100%;
+    height: 12em;
+    background-color: #ffffff;
+    display: none;
+    z-index: 999;
+    opacity: 0;
+    transition:  0.5s ease, max-height 0.5s ease;
+    position: fixed;  
+}
+
+#search input{
+    margin: 0 auto;
+    width: 80%;
+    height: 18%;
+    padding: 0.5em;
+    font-size: 20px;
+    border:2px solid  #267E1B;
+    color: #267E1B;
+    background-color: #ffffff;
+    position: relative;
+    top: 51%;
+    left: 10%;
+    outline: none;
+    border-radius: 8px;
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+/* animacion */
+@keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+/* botones */
+#user{
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+    gap: 1em;
+    justify-content: center;
+    align-items: center;
+}
+
+#user p{
+    color: #267E1B;
+    font-size: 20px;
+    font-weight: 700;
+}
+
+#user p:hover{
+    cursor: pointer;
+}
+
+#user img{
+    width: 2em;
+    height: 2em;
+}
+
+#user img:hover{
+    cursor: pointer;
+}
+
+.favourites{
+    width: 2em;
+    height: 2em;
+}
+
+.favourites:hover{
+    cursor: pointer;
+}
+/* dropdown/menu hamburguesa */
+
+
+.dropdown {
+position: relative;
+}
+
+.dropdown img{
+    width: 2.5rem;
+    height: 3rem;
+    
+}
+
+.dropdown img:hover{
+    cursor: pointer;
+}
+
+
+.dropdown-info {
+    position: absolute;
+    top: 112.3%;
+    left: -16.52em;
+    width: 20em;
+    height: auto;
+    display: none;
+    z-index: 1000;
+    background-color: #ffffff;
+    border: none;
+    padding: 1em;
+    border-radius: 8px 0 0 8px;
+    box-shadow: -5px 0px 5px rgba(0, 0, 0, 0.315);
+}
+
+.dropdown-item{
+    width: 100%;
+    height: 3em;
+    display: block;
+    color: #267E1B;
+    cursor: pointer;
+    margin-top: 1em;
+    border: 2px solid #267E1B;
+    border-radius: 8px;
+    background-color: #ffffff;
+}
+
+.link_btn_responsive{
+    text-decoration: none;
+}
+
+.dropdown-item p{
+    font-size: 1.2em;
+    font-weight: 700;
+}
+
+.dropdown-item:hover {
+    background-color: #267E1B;
+    color: #ffffff;
+    border:2px solid #267E1B;
+}
+
+#botones_responsive{
+    width: 100%;
+    margin-top: 1em;
+    display: none;
+}
+
+#botones_responsive button{
+    width: 10.5em;
+}
+
+
+.show {
+display: block;
+}
+
+/* responsive dropdown/menu hamburguesa */
+@media (max-width:767px){
+    .dropdown-info{
+        width: 10em;
+        left: -9em;
+    }
+
+}
+/* fin drodown/menu hamburguesa */
+
+
+/* responsive header */
+@media (max-width:1023px){
+
+}
+
+@media (max-width:767px){
+    .btn_register_navbar{
+        display: none;
+    }
+
+    #logotipo{
+        margin-left: 1.5em;
+    }
+
+    #parte_derecha{
+        margin-right: 1em;
+        gap: 0.8em;
+    }
+}
+/* fin header */
+
+/* flecha de regreso_Inicio_pag */
+#botonArriba {
+    position: fixed;
+    bottom: 20px;
+    right: 0;
+    display: none;
+    color: white;
+    border: none;
+    cursor: pointer;
+    z-index: 1000;
+    background: none;
+    
+  }
+  
+#botonArriba img:hover {
+    transform: scale(1.1);
+  }
+
+#botonArriba img{
+    width: 3em;
+    height: 3em;
+    transition: transform 0.3s ease-in-out;
+    border-radius: 50%;
+    background-color: #ffffff;
+}
+
+/* responsive flecha de regreso inicio */
+
+@media (max-width:1023px){
+    #botonArriba{
+        right: 20px;
+    }
+}
+
+/* Fin flecha de regreso_Inicio_pag */
+
+
+/* seccion_01 */
+#seccion_01{
+    width: 98.4%;
+    height: 40rem;
+}
+
+/* espacio donde ira la informacion*/
+#primicia{
+    width: 98%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    background-image:
+    /* efecto de desvanecimiento de la imagen */
+    linear-gradient(to right, white 28%, rgba(255, 255, 255, 0) 80%), 
+    url('../img/Pagina_inicio/ecoturismo.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    justify-content: center;
+    gap: 2.5em;
+    padding-top: 3em;
+    padding-left: 3.4em;
+}
+
+/* texto */
+#primicia h1{
+    font-size: 4em;
+    font-weight: 600;
+}
+
+.cambio_color{
+    color: #267E1B;
+    font-weight: 900;
+    font-size: 1em;
+
+}
+
+#primicia p{
+    font-size: 27px;
+}
+
+/* botones */
+#more_information_btn{
+    width: 14em;
+    height: 3.7em;
+    background-color: #3c8428;
+    color: white;
+    border-radius: 6px;
+    font-size: 20px;
+    border: none;
+}
+
+#more_information_btn:hover{
+    cursor: pointer;
+    color: #267E1B;
+    background-color: white;
+    border: 2px solid #267E1B;
+}
+
+#more_information_btn p{
+    font-size: 26px;
+}
+/* responsive seccion_01 */
+
+@media (max-width:1023px){
+    #primicia h1{
+        font-size: 3em;
+        font-weight: 600;
+    }
+    #primicia p{
+        font-size: 1.4em;
+    }
+
+    #more_information_btn{
+        width: 8em;
+        height: 3em;
+    }
+
+    #more_information_btn p{
+        font-size: 22px;
+    }
+}
+
+@media (max-width:767px){
+
+    #seccion_01{
+        height: 40rem;
+    }
+
+    #primicia{
+        gap: 4em;
+        width: 100%;
+        padding: 0;
+        align-items: center;
+        background-image:
+            linear-gradient(to right, white 50%, rgba(255, 255, 255, 0) 100%), 
+            url('../img/Pagina_inicio/ecoturismo.jpg');
+    }
+
+    #primicia h1{
+        font-size: 2.3em;
+        font-weight: 600;
+        text-align: center;
+    }
+    
+    .cambio_color{
+        font-size: 1em;
+    
+    }
+    
+    #primicia p{
+        font-size: 1.2em;
+        text-align: center;
+    }
+
+    #more_information_btn{
+        width: 7em;
+        height: 3em;
+    }
+
+    #more_information_btn p{
+        font-size: 16px;
+    }
+}
+
+/* fin seccion_01 */
+
+/* seccion_02 */
+#seccion_02{
+    width: 100%;
+    height: 44.8rem;
+}
+/* contenedores */
+#seccion_populares{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.titulos_populares{
+    width: 100%;
+    height: 15%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-top: 3em;
+}
+
+#contenedor_populares{
+    width: 100%;
+    height: 75%;
+    display: flex;
+    flex-direction: row;
+    gap: 3em;
+}
+
+/* contendores para los slider */
+#parte_izquierda_slider{
+    width: 70%;
+    height: 100%;
+    margin: auto;
+    padding-left: 2em;
+    padding-right: 2em;
+    position: relative;
+    overflow: hidden;
+    
+}
+
+.carousel-container {
+    overflow: hidden;
+    width: 100%; 
+}
+
+.info_content{
+    display: flex;
+    transition: transform 0.7s ease-in-out;
+}
+
+/* sitios a mostrar */
+
+/* imagenes */
+.visible{
+    /* reparte el espacio en tres y se le asigna a cada objeto con dicha clase */
+    min-width: calc(100% / 3);
+    box-sizing: border-box;
+    padding: 1em;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5em;
+}
+
+#parte_izquierda_slider img{
+    width: 17em;
+    height: 25.5em;
+    border-radius: 8px;
+    object-fit: cover;
+}
+
+.visible h5{
+    color: black;
+    font-size: 16px;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+    font-weight: bolder;
+    margin: 0;
+}
+
+.visible p{
+    color: #5c5959;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+    margin: 0.2em 0;
+}
+
+/* botones slider */
+
+.flecha {
+    font-size: 2em;
+    font-weight: bold;
+    color: #208114;
+    text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.621);
+    font-family: Arial, sans-serif;
+  }
+
+#botones_slider{
+    margin-left: 20px;
+    display: flex;
+    gap: 0.2em;
+}
+
+#botones_slider button{
+    background: none;
+    color: black;
+    border: none;
+    cursor: pointer;
+    transition: background 0.3s, opacity 0.3s;
+}
+
+/* propiedad que se da a los elementos sin la clse desactivado */
+#botones_slider button:hover:not(.desactivado) {
+    color: #208114;
+}
+
+/* propiedades para los elmentos con la clase desactivado */
+#botones_slider button.desactivado{
+    opacity: 0.5;
+    pointer-events: none;
+    cursor: default;
+}
+
+/* parte derecha populares */
+#parte_derecha_titulo{
+    height: 100%;
+    width: 40%;
+    display: flex;
+    flex-direction: column;
+    justify-content: first baseline;
+    margin-top: 6em;
+    align-items: end;
+    gap: 1.5em;
+    padding-right:2em ;
+}
+
+/* titulo y texto */
+#parte_derecha_titulo h1{
+    font-size: 50px;
+    font-weight: bolder;
+}
+
+.cambio_color_02{
+    color: #267E1B;
+}
+
+/* botones */
+#parte_derecha_titulo p{
+    text-align: end;
+    font-size: 18px;
+}
+
+#more_information_btn4{
+    width: 15em;
+    height: 3.5em;
+    background-color: #267E1B;
+    color: white;
+    border: 2px solid #267E1B;
+    border-radius: 7px;
+    font-weight: 600;
+}
+
+#more_information_btn4:hover{
+    background-color: white;
+    cursor: pointer;
+    color: #267E1B;
+    
+}
+
+/* responsive seccion_02 */
+
+@media (max-width:1023px){
+    #seccion_populares h1{
+        justify-content: end;
+    }
+    .visible {
+        min-width: 100%;
+    }
+    
+    #parte_izquierda_slider {
+        width: 100%;
+    }
+    
+    #parte_izquierda_slider img {
+        width: 100%;
+        height: 50%;
+    }
+    .titulos_populares{
+        font-size: 1.2em;
+        text-align: right;
+    }
+
+}
+
+@media (max-width:767px){
+
+.titulos_populares h1{
+    font-size: 1.3em;
+    text-align: center;
+}
+
+
+ /* 1) sección que crece con el contenido */
+ #seccion_02 {
+    height: auto;
+  }
+
+  /* 2) apilar slider y texto */
+  #contenedor_populares {
+    flex-direction: column;
+    align-items: center;
+    gap: 0.1em;
+  }
+
+  /* 3) slider full-width */
+  #parte_izquierda_slider {
+    width: 100%;
+    position: relative;
+    overflow: hidden;
+    padding: 0;
+  }
+
+  /* mantén overflow para ocultar el resto de slides */
+  .carousel-container {
+    width: 100%;
+    overflow: hidden;       
+  }
+
+  /* 4) cada “visible” ocupa 100% del ancho */
+  .info_content {
+    display: flex;
+    transition: transform 0.7s ease-in-out;
+  }
+
+  .visible {
+    min-width: 100%;
+  }
+
+  /* 5) imagen adaptativa sin cortes */
+  .visible img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    border-radius: 8px;
+  }
+
+  /* 7) texto y botón centrados */
+  #parte_derecha_titulo {
+    width: 100%;
+    padding: 0 1em;
+    text-align: center;
+    align-items: center;
+    margin-top: -12em;
+  }
+
+  #parte_derecha_titulo h1 {
+    font-size: 2em;
+    line-height: 1.3;
+  }
+
+  #parte_derecha_titulo p {
+    font-size: 1em;
+    text-align: center;
+  }
+
+  #more_information_btn4 {
+    width: 100%;
+    max-width: 300px;
+    margin: 1em auto 0;
+  }
+    
+}
+
+/* fin seccion_02 */
+
+/* seccion_03 */
+#seccion_03{
+    width: 100%;
+    height: 40rem;
+}
+
+#contenedor_eventos{
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+
+#slide_content{
+    width: 100%;
+    height: 100%;
+    position: relative;
+    overflow: hidden;
+    margin-top: 4rem;
+}
+
+.event{
+position: absolute;
+  top: 0; left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  transition: opacity 0.8s ease;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-size: cover;
+  background-position: center;
+}
+
+/* propiedades para los lemento s que se les agregue la clase activa con js */
+.event.active{
+    opacity: 1;
+    pointer-events: auto;
+}
+
+/* titulo */
+.title{
+position: absolute;
+top: 7rem;          
+left: 50%;
+transform: translateX(-50%);
+font-size: 25px;
+text-decoration: underline;
+color: white;
+z-index: 5;   
+}
+
+/* eventos */
+.event_1 {
+background-image:
+    linear-gradient(rgba(0,0,0,0.516), rgba(0,0,0,0.505)),
+    url('../img/Pagina_inicio/Pasadia-termales-de-santa-rosa-de-cabal-y-filandia.webp');
+}
+.event_2 {
+background-image:
+    linear-gradient(rgba(0,0,0,0.516), rgba(0,0,0,0.505)),
+    url('../img/Pagina_inicio/Nevado-del-Tolima-WalterV-1024x683.jpeg');
+}
+.event_3 {
+background-image:
+linear-gradient(rgba(0,0,0,0.516), rgba(0,0,0,0.505)),
+url('../img/Pagina_inicio/Pasadia-termales-de-santa-rosa-de-cabal-y-filandia.webp');
+}
+.event_4 {
+background-image:
+    linear-gradient(rgba(0,0,0,0.516), rgba(0,0,0,0.505)),
+    url('../img/Pagina_inicio/Nevado-del-Tolima-WalterV-1024x683.jpeg');
+}
+.event_5 {
+background-image:
+    linear-gradient(rgba(0,0,0,0.516), rgba(0,0,0,0.505)),
+    url('../img/Pagina_inicio/Pasadia-termales-de-santa-rosa-de-cabal-y-filandia.webp');
+}
+/* propiedades de cada evento */
+.event{
+display: flex;
+flex-direction: column;
+gap: 3em;
+align-items: center;
+pointer-events: none;
+}
+
+/* titulo */
+.event h1{
+font-size: 70px;
+font-weight: 700;
+color: white;
+}
+
+.flecha_slider2{
+font-size: 12em;
+color: #ffffff;
+font-family: Arial, sans-serif; 
+opacity: 0.5;
+}
+
+/* botones slider */
+.prev{
+position: absolute;
+top: 50%;
+transform: translateY(-50%);
+background: transparent;
+border: none;
+color: white;
+cursor: pointer;
+z-index: 2;
+}
+
+.next{
+position: absolute;
+top: 50%;
+right: 0;
+transform: translateY(-50%);
+background: transparent;
+border: none;
+color: white;
+cursor: pointer;
+z-index: 2;
+}
+
+.dots {
+position: absolute;
+bottom: 1rem;
+left: 50%;
+transform: translateX(-50%);
+display: flex;
+gap: .5rem;
+z-index: 2;
+}
+
+.dot {
+width: .6rem;
+height: .6rem;
+background: rgba(255,255,255,.5);
+border-radius: 50%;
+cursor: pointer;
+}
+
+.dot.active {
+background: white;
+}
+
+/* boton de mas info */
+.more_information_btn3{
+width: 13em;
+height: 3.8em;
+background: none;
+border: 3px solid white;
+border-radius: 8px;
+color: white;
+}
+
+.more_information_btn3 p{
+    font-size: 16px;
+}
+
+.more_information_btn3:hover{
+    cursor: pointer;
+    background-color: white;
+    color: black;
+}
+
+/* responsive seccion_03 */
+
+@media (max-width:1023px){
+    .title{
+        font-size: 1.7em;
+    }
+    .event h1{
+        font-size: 3em;
+    }
+    .flecha_slider2{
+        font-size: 9em;
+    }
+
+}
+
+@media (max-width:767px){
+    .title{
+        font-size: 1.7em;
+    }
+    .event h1{
+        font-size: 2.5em;
+        text-align: center;
+    }
+    .flecha_slider2{
+        font-size: 8em;
+    }
+    .dot {
+        width: 0.8em;
+        height: 0.8em;
+    }
+
+    .more_information_btn3{
+        width: 10em;
+        height: 4em;
+    }
+}
+
+
+/* fin seccion_03 */
+
+/* seccion_04 */
+#seccion_04{
+    width: 100%;
+    height: auto;
+}
+
+#contenedor_seccion{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+/* titulo */
+#contenedor_seccion h1{
+    font-size: 30px;
+    margin-top: 40px;
+
+}
+/* contenedor de beneficios */
+#beneficios{
+    width: 100%;
+    height: 25em;;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 15em;
+    margin-left: 4em;
+}
+
+/* imagenes */
+#beneficios img{
+    width: 10em;
+    height: 10em;
+}
+
+/* propiedades individuales de cada carta */
+#beneficio1{
+    
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    gap: 1.5em;
+}
+
+ #beneficio2{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    gap: 1.5em;
+}
+
+#beneficio3{
+   
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    gap: 1.5em;
+}
+
+.parrafo1{
+    font-size: 20px;
+    text-align: center;
+
+}
+
+/* botones de mas info */
+#more_information_btn2{
+    width: 17em;
+    height: 3.7em;
+    background-color: #3c8428;
+    color: white;
+    border-radius: 4px;
+    border: none;
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+}
+
+#more_information_btn2:hover{
+    cursor: pointer;
+    color: #267E1B;
+    background-color: white;
+    border: 2px solid #267E1B;
+}
+
+/* responsive seccion_04 */
+
+@media(max-width: 1023px) {
+    #beneficios{
+      gap: 5em;    
+    }
+    #beneficios p{
+        font-size: 0.8em;
+    }
+  }
+
+
+@media(max-width: 768px) {
+
+    #contenedor_seccion h1{
+        text-align: center;
+    }
+
+    #beneficios{
+        width: 100%;
+        margin-top: 15em;
+        flex-direction: column;
+        align-items: center;
+        gap: 2em; 
+        margin-bottom: 15em;
+        margin-left: 0; 
+        
+    }
+  }
+
+/* fin seccion_04 */
+
+
+/* Pie de Pagina */
+.footer {
+    border-top:1px solid #267E1B;
+    background-color: #e4e4e4e6;
+    color: hsl(0, 0%, 33%);
+    padding: 40px 20px;
+    font-family: Arial, sans-serif;
+  }
+  
+  .footer-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 30px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  
+  .footer-col {
+    flex: 1 1 200px;
+    min-width: 200px;
+  }
+  
+  .footer-col h2 {
+    font-size: 1.5em;
+    margin-bottom: 5px;
+    color: #333;
+  }
+  
+  .footer-col h4 {
+    font-size: 1.1em;
+    margin-bottom: 10px;
+    color: #333;
+  }
+  
+  .footer-col p {
+    margin-bottom: 10px;
+  }
+  
+  .footer-col ul {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .footer-col ul li {
+    margin-bottom: 8px;
+  }
+  
+  .footer-col ul li a {
+    text-decoration: none;
+    color: #555;
+  }
+  
+  .footer-col ul li a:hover {
+    text-decoration: underline;
+  }
+  
+  .social-icons a {
+    margin-right: 10px;
+    font-size: 1.2em;
+    color: #4caf50;
+  }
+  
+  .language-selector {
+    margin-top: 10px;
+    
+  }
+  
+  .language-selector select {
+    margin-left: 5px;
+    padding: 5px;
+    border-radius: 7px;
+  }
+  
+  .footer-bottom {
+    text-align: center;
+    margin-top: 30px;
+    font-size: 0.9em;
+    color: #514f4f;
+  }
+

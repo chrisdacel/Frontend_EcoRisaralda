@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/svg" href="img/Pagina_inicio/nature-svgrepo-com.svg">
+    <link rel="stylesheet" href="css/style_pagina_inicio_loguin.css">
+    <link href="https://fonts.googleapis.com/css2?family=Albert+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <title>ConexionEcoRisaralda</title>
+</head>
+<body>
+    <!-- header -->
+    <header class="header">
+        <!-- div que contiene el logo de la empresa con hipervinculo a la pagina principal-->
+        <div id="logotipo">
+            <!-- imagen de logo -->
+            <a href="pagina_inicio_loguin.html"><img src="img/Pagina_inicio/nature-svgrepo-com.svg" alt="Logo empresa" id="logo"></a>
+
+            <!-- div de texto de logo -->
+            <div>
+                <a class="header-brand" href="Pagina_Inicio.html"><h3>Conexion</h3><h5>EcoRisaralda</h5><h6>USUARIO</h6></a>
+            </div>
+            
+        </div>
+        <!-- parte derecha del encabezado -->
+        <div id="parte_derecha">
+            <!-- barra de busqueda -->     
+                <div id="buscador">
+                    <img src="img/Pagina_inicio/search-svgrepo-com.svg" alt="Buscar" id="buscar">
+                    <p>Buscar</p>
+                </div>       
+                <div id="user">
+                    <img src="img/Coleccion_sitios_ecoturisticos/user.svg" alt="">
+                    <p>Jane Mar</p>
+                </div>
+                <img src="img/Coleccion_sitios_ecoturisticos/favourites.png" class="favourites" alt="">
+            <!-- dropdown -->
+            <div class="dropdown">
+                    <img src="img/Pagina_inicio/img_drop_down.png" alt="Menú" id="img_dropdown">
+                <div class="dropdown-info">
+                  <a class="link_btn_responsive" href="pagina_inicio_loguin.html"><button class="dropdown-item" ><p>Inicio</p></button></a>
+                  <a class="link_btn_responsive" href="coleccion_sitios_ecoturisticos_loguin.html"><button class="dropdown-item"><p>Coleccion</p></button></a>
+                  <a class="link_btn_responsive" href="sobre_nosotros_loguin.html"><button class="dropdown-item"><p>Acerca Nosotros</p></button></a>
+                  <div id="botones_responsive">
+                  </div>
+                </div>
+              </div>
+                
+        </div>
+    </header>
+    <!-- dropdown input de busqueda -->
+    <div id="search" class="search">
+        <input type="text" placeholder="Escribe tu búsqueda...">
+    </div>
+    
+    <!-- boton para regresar a la pagina de inicio -->
+    <button id="botonArriba" title="Volver arriba"><img src="img/Pagina_inicio/arrow-up2.svg" alt=""></button>
+
+    <!-- contenido principal -->
+    <main>
+
+        <!-- seccion_01 -->
+        <section id="seccion_01">
+            <!-- informacion -->
+            <div id="primicia">
+                <!-- titulo de la seccion -->
+                <div class="titulos">
+                    <h1>Descubre los mejores</h1>
+                    <!-- h1 con efecto strong -->
+                    <h1> sitios <strong class="cambio_color">ecoturisticos</strong></h1>
+                </div>
+                <!-- descripcion de la informacion -->
+                <div class="parrafos">
+                <p>Explora rutas y lugares unicos donde disfrutar de la</p>
+                <p>naturaleza de manera sostenible.¡Tu proxima aventura</p>
+                <p>verde te espera!</p>
+                </div>
+                <!-- boton de ver mas -->
+                <a href="coleccion_sitios_ecoturisticos_loguin.html"><button id="more_information_btn"><p>Ver más</p></button></a>
+            </div>
+        </section>
+
+        <!-- seccion_02 -->
+        <section id="seccion_02">
+            <!-- contenedor general populares -->
+            <div id="seccion_populares">
+                <!-- titulo populares -->
+                <div class="titulos_populares">
+                    <h1>¡Mantente al día con los sitios más populares y eventos</h1>
+                    <h1>siempre actualizados!</h1>
+                </div>
+                <!-- contenedor populares -->
+                <div id="contenedor_populares">
+                    <!-- parte izquierda populares slider -->
+                    <div id="parte_izquierda_slider">
+                        <!-- botones del slider -->
+                        <div id="botones_slider">
+                            <!-- span que simulan flechas &lsaquo; y &rsaquo; dan forma de flecha al span-->
+                            <button id="atras_btn"><span class="flecha">&lsaquo;</span></button>
+                            <button id="adelante_btn"><span class="flecha">&rsaquo;</span></button>
+                        </div>
+                        <!-- contenedor de slider -->
+                        <div class="carousel-container">
+                            <!-- contenedor informacion slider -->
+                             <div class="info_content">
+                                <!-- sitio visible 1 -->
+                                <div class="visible">
+                                    <!-- imagen representativa -->
+                                    <img src="img/Pagina_inicio/Santuario-Fauna-Flora-Otun-Quimbaya-Ucumari-13.jpg" alt="Sitio ecoturistico">
+                                    <div>
+                                        <!-- Titulo sitio -->
+                                        <h5>Parque Regional Natural </h5>
+                                        <h5>Ucumari</h5>
+                                    </div>
+                                    <!-- direccion de sitio -->
+                                    <p>Via Pereira- La virginia</p>
+                                </div>
+                        
+                                <!-- sitio visible 2 -->
+                                <div class="visible">
+                                    <!-- imagen representativa 2 -->
+                                    <img src="img/Pagina_inicio/Nevado-del-Tolima-WalterV-1024x683.jpeg" alt="Sitio ecoturistico">
+                                    <div>
+                                    <!-- Titulo sitio -->
+                                    <h5>Parque Nacional </h5>
+                                    <h5>Natural Los Nevados</h5>
+                                    </div>
+                                    <!-- Direccion -->
+                                    <p>Municipio de Santa Rosa de Cabal</p>
+                                </div>
+
+                                <!-- Sitio visible 3 -->
+                                <div class="visible">
+                                    <!-- imagen representativa -->
+                                    <img src="img/Pagina_inicio/guasimo.jpg" alt="Sitio Ecoturistico">
+                                    <div>
+                                        <!-- Titulo sitio -->
+                                        <h5>Sendero Ecológico </h5>
+                                        <h5>Guasimo</h5>
+                                    </div>
+                                    <!-- Direccion Sitio-->
+                                    <p>Santa Rosa de Cabal y Pereira</p>
+                                </div>
+
+                                <!-- sitio visible 4 -->
+                                <div class="visible">
+                                    <!-- imagen representativa -->
+                                    <img src="img/Pagina_inicio/Santuario-Fauna-Flora-Otun-Quimbaya-Ucumari-13.jpg" alt="Sitio ecoturistico">
+                                    <div>
+                                        <!-- Titulo sitio -->
+                                        <h5>Parque Regional Natural </h5>
+                                        <h5>Ucumari</h5>
+                                    </div>
+                                    <!-- direccion de sitio -->
+                                    <p>Via Pereira- La virginia</p>
+                                </div>
+
+                                <!-- sitio visible 5 -->
+                                <div class="visible">
+                                    <!-- imagen representativa -->
+                                    <img src="img/Pagina_inicio/Santuario-Fauna-Flora-Otun-Quimbaya-Ucumari-13.jpg" alt="Sitio ecoturistico">
+                                    <div>
+                                        <!-- Titulo sitio -->
+                                        <h5>Parque Regional Natural </h5>
+                                        <h5>Ucumari</h5>
+                                    </div>
+                                    <!-- direccion de sitio -->
+                                    <p>Via Pereira- La virginia</p>
+                                </div>
+
+                                <!-- sitio visible 6 -->
+                                <div class="visible">
+                                    <!-- imagen representativa -->
+                                    <img src="img/Pagina_inicio/Santuario-Fauna-Flora-Otun-Quimbaya-Ucumari-13.jpg" alt="Sitio ecoturistico">
+                                    <div>
+                                        <!-- Titulo sitio -->
+                                        <h5>Parque Regional Natural </h5>
+                                        <h5>Ucumari</h5>
+                                    </div>
+                                    <!-- direccion de sitio -->
+                                    <p>Via Pereira- La virginia</p>
+                                </div>
+
+                                <!-- sitio visible 7 -->
+                                <div class="visible">
+                                    <!-- imagen representativa -->
+                                    <img src="img/Pagina_inicio/Santuario-Fauna-Flora-Otun-Quimbaya-Ucumari-13.jpg" alt="Sitio ecoturistico">
+                                    <div>
+                                        <!-- Titulo sitio -->
+                                        <h5>Parque Regional Natural </h5>
+                                        <h5>Ucumari</h5>
+                                    </div>
+                                    <!-- direccion de sitio -->
+                                    <p>Via Pereira- La virginia</p>
+                                </div>
+
+                                <!-- sitio visible 8 -->
+                                <div class="visible">
+                                    <!-- imagen representativa -->
+                                    <img src="img/Pagina_inicio/Santuario-Fauna-Flora-Otun-Quimbaya-Ucumari-13.jpg" alt="Sitio ecoturistico">
+                                    <div>
+                                        <!-- Titulo sitio -->
+                                        <h5>Parque Regional Natural </h5>
+                                        <h5>Ucumari</h5>
+                                    </div>
+                                    <!-- direccion de sitio -->
+                                    <p>Via Pereira- La virginia</p>
+                                </div>
+
+                                <!-- sitio visible 9 -->
+                                <div class="visible">
+                                    <!-- imagen representativa -->
+                                    <img src="img/Pagina_inicio/Santuario-Fauna-Flora-Otun-Quimbaya-Ucumari-13.jpg" alt="Sitio ecoturistico">
+                                    <div>
+                                        <!-- Titulo sitio -->
+                                        <h5>Parque Regional Natural </h5>
+                                        <h5>Ucumari</h5>
+                                    </div>
+                                    <!-- direccion de sitio -->
+                                    <p>Via Pereira- La virginia</p>
+                                </div>
+
+                                <!-- sitio visible 10 -->
+                                <div class="visible">
+                                    <!-- imagen representativa -->
+                                    <img src="img/Pagina_inicio/Santuario-Fauna-Flora-Otun-Quimbaya-Ucumari-13.jpg" alt="Sitio ecoturistico">
+                                    <div>
+                                        <!-- Titulo sitio -->
+                                        <h5>Parque Regional Natural </h5>
+                                        <h5>Ucumari</h5>
+                                    </div>
+                                    <!-- direccion de sitio -->
+                                    <p>Via Pereira- La virginia</p>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Parte derecha Populares -->
+                    <div id="parte_derecha_titulo">
+                        <!-- Titulo -->
+                        <h1>Más <strong class="cambio_color_02">Populares</strong></h1>
+                        <div id="parrafos_populares">
+                            <!-- Texto primicia -->
+                        <p>Descubre los sitios Ecoturisticos más populares y vive la</p>
+                        <p>naturaleza en su maxima expresion</p>
+                        </div>
+                        <!-- boton de mas informacion -->
+                        <a href="coleccion_sitios_ecoturisticos_loguin.html"><button id="more_information_btn4">Más informacion</button></a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- seccion_03 -->
+        <section id="seccion_03">
+            <!-- contenedor de sitios con eventos disponbles -->
+            <div id="contenedor_eventos">
+                <!-- titulo seccion -->
+                <h3 class="title">EVENTOS</h3>
+                <!-- slider con los diferentes eventos disponibles -->
+                <div id="slide_content">
+                    <!-- evento_01 -->
+                    <div class="event event_1 active">
+                        <h1>Santa Rosa De Cabal</h1>
+                        <a href="sitios_log.html"><button class="more_information_btn3"><p>Más informacion</p></button></a>
+                    </div>
+                    <!-- evento_02 -->
+                    <div class="event  event_2">
+                        <h1>Via Pereira La Virginia</h1>
+                        <a href="sitios_log.html"><button class="more_information_btn3"><p>Más informacion</p></button></a>
+                    </div>
+                    <!-- evento_03 -->
+                    <div class="event  event_3">
+                        <h1>Santa Rosa De Cabal</h1>
+                        <a href="sitios_log.html"><button class="more_information_btn3"><p>Más informacion</p></button></a>
+                    </div>
+                    <!-- evento_04 -->
+                    <div class="event  event_4">
+                        <h1>Via Pereira La Virginia</h1>
+                        <a href="sitios_log.html"><button class="more_information_btn3"><p>Más informacion</p></button></a>
+                    </div>
+                    <!-- evento_05 -->
+                    <div class="event  event_5">
+                        <h1>Santa Rosa De Cabal</h1>
+                        <a href="sitios_log.html"><button class="more_information_btn3"><p>Más informacion</p></button></a>
+                    </div>
+                </div>
+                <!-- Flechas/botones de navegacion del slider -->
+                <button class="arrow prev"><span class="flecha_slider2">&lsaquo;</span></button>
+                <button class="arrow next"><span class="flecha_slider2">&rsaquo;</span></button>
+
+                <!-- Dots/puntitos que demarcan la posiciondentro del slider -->
+                <div class="dots">
+                    <!-- subcle que sirve para establecer el dot donde nos ubicamos -->
+                    <span class="dot active"></span>
+                    <span class="dot"></span>
+                    <span class="dot"></span>
+                    <span class="dot"></span>
+                    <span class="dot"></span>
+                </div>
+                
+            </div>
+
+        </section>
+        <!-- fin seccion_03  -->
+
+        <!-- seccion_04 -->
+        <section id="seccion_04">
+            <!-- contenedor de informacion de la seccion -->
+            <div id="contenedor_seccion">
+                <!-- Titulo -->
+                <h1>Descubre todos los beneficios</h1>
+                <!-- contenedor de beneficios -->
+                <div id="beneficios">
+                    <!-- primer beneficio -->
+                    <div id="beneficio1">
+                        <img src="img/Pagina_inicio/marcador.png" alt="Imagen representativa">
+                        <div class="parrafo1">
+                            <p>¡Guarda y gestiona tus sitios</p>
+                            <p>ecoturisticos facilmente!</p>
+                        </div>
+                    </div>
+                    <!-- segundo beneficio -->
+                    <div id="beneficio2">
+                        <img src="img/Pagina_inicio/activo.png" alt="Imagen representativa">
+                        <div class="parrafo1">
+                            <p>¡Personaliza tus</p>
+                            <p>notificaciones a tu gusto!</p>
+                        </div>
+                    </div>
+                    <!-- Tercer beneficio -->
+                    <div id="beneficio3">
+                        <img src="img/Pagina_inicio/chat-bot.png" alt="Imagen Rpresentativa">
+                        <div class="parrafo1">
+                            <p>¡Deja tu reseña y calificacion para</p>
+                            <p>compartit tu experiencia!</p>
+                        </div >
+                    </div>
+                </div>
+                <!-- Boton para ver más -->
+                <a href="Coleccion_sitios_ecoturisticos.html"><button id="more_information_btn2">Leer más</button></a>
+            </div>
+        </section>
+
+    </main>
+    <!-- footer -->
+    <footer class="footer">
+        <!-- contenedor de footer -->
+        <div class="footer-container">
+            <!-- primera columna del footer -->
+          <div class="footer-col">
+            <!-- titulo -->
+            <h2>Conexion</h2>
+            <p>EcoRisaralda</p>
+            <!-- iconos importados -->
+            <div class="social-icons">
+              <a href="#"><i class="fab fa-facebook"></i></a>
+              <a href="#"><i class="fab fa-linkedin"></i></a>
+              <a href="#"><i class="fab fa-youtube"></i></a>
+              <a href="#"><i class="fab fa-instagram"></i></a>
+            </div>
+            <!-- selector de lenguaje -->
+            <div class="language-selector">
+              🌐
+              <!-- seleccion -->
+              <select>
+                <option>Español</option>
+                <option>English</option>
+              </select>
+            </div>
+          </div>
+          <!-- columna del footer -->
+          <div class="footer-col">
+            <h4>Información</h4>
+            <!-- lista desordenad -->
+            <ul>
+                <!-- elementos de la lista -->
+              <li><a href="Pagina_Inicio.html">Conexión EcoRisaralda</a></li>
+              <li><a href="Pagina_Inicio.html">Descripcion</a></li>
+              <li><a href="Pagina_Inicio.html">Lema</a></li>
+            </ul>
+          </div>
+          <!-- columna footer -->
+          <div class="footer-col">
+            <h4>Navegación rápida</h4>
+            <!-- lista desordenada -->
+            <ul>
+                <!-- elementos -->
+                <li><a href="pagina_inicio_loguin.html">Inicio</a></li>
+                <li><a href="sobre_nosotros_loguin.html">Sobre nosotros</a></li>
+                <li><a href="pagina_inicio_loguin.html">Políticas</a></li>
+            </ul>
+          </div>
+          <!-- columna footer -->
+          <div class="footer-col">
+            <h4>Contacto y soporte</h4>
+            <!-- lista desordenada -->
+            <ul>
+                <!-- elementos -->
+              <li><a href="mailto:ecorisaralda@contacto.com">ecorisaralda@contacto.com</a></li>
+              <li><a href="#">300 445 80055</a></li>
+              <li><a href="#">Preguntas</a></li>
+            </ul>
+          </div>
+        </div>
+        <!-- derechos reservados -->
+        <div class="footer-bottom">
+          <p><em>Conectando viajeros con la naturaleza. Explora, guarda y comparte experiencias únicas.</em></p>
+          <p>© 2025 Conexión EcoRisaralda – Todos los derechos reservados.</p>
+        </div>
+      </footer>
+      <script type="text/javascript" src="js/main_pagina_inicio_loguin.js"></script>
+</body>
+</html>
