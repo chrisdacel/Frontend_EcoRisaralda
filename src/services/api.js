@@ -186,3 +186,54 @@ export async function fetchRecommendations() {
     throw error.response?.data || { message: 'Error obteniendo recomendaciones' };
   }
 }
+// ============ PREFERENCIAS ============
+/**
+ * Obtener catálogo completo de preferencias
+ */
+export async function fetchPreferencesOptions() {
+  try {
+    const { data } = await api.get('/api/preferences');
+    return data;
+  } catch (error) {
+    throw error.response?.data || { message: 'Error obteniendo preferencias' };
+  }
+}
+
+/**
+ * Obtener preferencias del usuario actual (requiere autenticación)
+ */
+export async function fetchUserPreferences() {
+  try {
+    const { data } = await api.get('/api/user/preferences');
+    return data;
+  } catch (error) {
+    throw error.response?.data || { message: 'Error obteniendo preferencias del usuario' };
+  }
+}
+
+/**
+ * Actualizar preferencias del usuario (requiere autenticación)
+ * @param {array} preferenceIds - Array de IDs de preferencias [1, 3, 5, ...]
+ */
+export async function updateUserPreferences(preferenceIds) {
+  try {
+    const { data } = await api.post('/api/user/preferences', {
+      preferences: preferenceIds,
+    });
+    return data;
+  } catch (error) {
+    throw error.response?.data || { message: 'Error actualizando preferencias' };
+  }
+}
+
+/**
+ * Obtener si es primera vez que el usuario configura preferencias
+ */
+export async function checkFirstTimePreferences() {
+  try {
+    const { data } = await api.get('/api/user/first-time-preferences');
+    return data.first_time;
+  } catch (error) {
+    return false;
+  }
+}
