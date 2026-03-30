@@ -173,3 +173,4 @@ export async function getCurrentUser() {
     return null;
   }
 }
+export async function fetchNotifications() { return []; }
