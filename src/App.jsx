@@ -6,7 +6,7 @@ import Header from './components/Header';
 import AccessibilityButton from './components/AccessibilityButton';
 import ScrollToTopFab from './components/ScrollToTopFab';
 
-// Lazy loaded pages (SOLO las del flujo de Autenticación HU001)
+// Lazy loaded pages (HU001: Flujo de Autenticación)
 const LoginPage = lazy(() => import('./LoginPage'));
 const RegisterPage = lazy(() => import('./RegisterPage'));
 const ForgotPasswordPage = lazy(() => import('./ForgotPasswordPage'));
@@ -18,6 +18,9 @@ const RegistroOperador1 = lazy(() => import('./RegistroOperador1'));
 const RegistroOperador2 = lazy(() => import('./RegistroOperador2'));
 const RegistroTurista1 = lazy(() => import('./RegistroTurista1'));
 const RegistroTurista2 = lazy(() => import('./RegistroTurista2'));
+
+// (HU002): Importamos la Colección Ecoturística
+const ColeccionPage = lazy(() => import('./ColeccionPage'));
 
 // Protector para no dejar entrar al login si ya estás logueado
 const GuestRoute = ({ children }) => {
@@ -111,6 +114,9 @@ function AppRoutes() {
         <Route path="/registro-operador-2" element={<RegistroOperador2 />} />
         <Route path="/registro-turista-1" element={<RegistroTurista1 />} />
         <Route path="/registro-turista-2" element={<RegistroTurista2 />} />
+
+        {/* HU002): Ruta pública para acceder a la colección de sitios */}
+        <Route path="/coleccion" element={<ColeccionPage />} />
 
         {/* Como aún no hemos migrado el HomePage "/", redirigimos a login temporalmente */}
         <Route path="*" element={<Navigate to="/login" replace />} />
