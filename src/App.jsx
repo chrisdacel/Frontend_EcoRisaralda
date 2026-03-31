@@ -28,6 +28,10 @@ const PreferencesPage = lazy(() => import('./PreferencesPage'));
 // HU006): Importamos la Landing Completa del Sitio
 const SitioDetailPage = lazy(() => import('./SitioDetailPage'));
 
+// HU008: Importamos la Página de Favoritos
+const FavoritosPage = lazy(() => import('./FavoritosPage'));
+
+
 // Protector para no dejar entrar al login si ya estás logueado
 const GuestRoute = ({ children }) => {
   const { user } = useAuth();
@@ -140,6 +144,10 @@ function AppRoutes() {
         <Route path="/turista/sitio/:id" element={<SitioDetailPage />} />
         <Route path="/operador/sitio/:id" element={<SitioDetailPage />} />
         <Route path="/admin/sitio/:id" element={<SitioDetailPage />} />
+        
+        {/* (HU008): Ruta temporal de Favoritos del Turista */}
+        <Route path="/turista/favoritos" element={<FavoritosPage />} />
+
 
         {/* Como aún no hemos migrado el HomePage "/", redirigimos a login temporalmente */}
         <Route path="*" element={<Navigate to="/login" replace />} />
