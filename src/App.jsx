@@ -35,6 +35,11 @@ const FavoritosPage = lazy(() => import('./FavoritosPage'));
 const OperatorSitesPage = lazy(() => import('./OperatorSitesPage'));
 const CreateSitioPage = lazy(() => import('./CreateSitioPageLeaflet'));
 
+// HU010: Panel de Operador y Formulario Creación/Edición
+const OperatorEventsPage = lazy(() => import('./OperatorEventsPage'));
+const CreateEventPage = lazy(() => import('./CreateEventPage'));
+
+
 
 // Protector para no dejar entrar al login si ya estás logueado
 const GuestRoute = ({ children }) => {
@@ -161,7 +166,7 @@ function AppRoutes() {
         {/* (HU008): Ruta temporal de Favoritos del Turista */}
         <Route path="/turista/favoritos" element={<FavoritosPage />} />
 
-        {/* 👉 NUEVO (HU009): Rutas Privadas del Operador */}
+        {/* (HU009): Rutas Privadas del Operador */}
         <Route 
           path="/operador/mis-sitios" 
           element={
@@ -185,6 +190,14 @@ function AppRoutes() {
               <CreateSitioPage />
             </OperatorRoute>
           } 
+        />
+          <Route 
+          path="/operador/mis-eventos" 
+          element={<OperatorRoute><OperatorEventsPage /></OperatorRoute>} 
+        />
+        <Route 
+          path="/operador/sitio/:id/evento/crear" 
+          element={<OperatorRoute><CreateEventPage /></OperatorRoute>} 
         />
 
         {/* Como aún no hemos migrado el HomePage "/", redirigimos a login temporalmente */}
