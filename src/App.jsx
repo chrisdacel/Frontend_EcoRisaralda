@@ -22,8 +22,11 @@ const RegistroTurista2 = lazy(() => import('./RegistroTurista2'));
 // Lazy loaded pages (HU002: Colección)
 const ColeccionPage = lazy(() => import('./ColeccionPage'));
 
-// 👉 NUEVO (HU003): Importamos el Wizard de Preferencias
+// Lazy loaded pages (HU003: Preferencias)
 const PreferencesPage = lazy(() => import('./PreferencesPage'));
+
+// HU006): Importamos la Landing Completa del Sitio
+const SitioDetailPage = lazy(() => import('./SitioDetailPage'));
 
 // Protector para no dejar entrar al login si ya estás logueado
 const GuestRoute = ({ children }) => {
@@ -120,7 +123,7 @@ function AppRoutes() {
 
         <Route path="/coleccion" element={<ColeccionPage />} />
 
-        {/* 👉 NUEVO (HU003): Ruta conectada al registro para Preferencias */}
+        {/* Ruta conectada al registro para Preferencias (HU003) */}
         <Route 
           path="/preferencias" 
           element={
@@ -131,6 +134,12 @@ function AppRoutes() {
             />
           } 
         />
+
+        {/* (HU006): El componente maestro SitioDetailPage gestiona su render según el Rol internamente */}
+        <Route path="/sitio/:id" element={<SitioDetailPage />} />
+        <Route path="/turista/sitio/:id" element={<SitioDetailPage />} />
+        <Route path="/operador/sitio/:id" element={<SitioDetailPage />} />
+        <Route path="/admin/sitio/:id" element={<SitioDetailPage />} />
 
         {/* Como aún no hemos migrado el HomePage "/", redirigimos a login temporalmente */}
         <Route path="*" element={<Navigate to="/login" replace />} />
