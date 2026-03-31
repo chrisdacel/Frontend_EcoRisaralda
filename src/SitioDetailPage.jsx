@@ -7,6 +7,7 @@ import markerShadow from 'leaflet/dist/images/marker-shadow.png';
 import { useEffect, useState, useRef } from 'react';
 import Footer from './components/Footer';
 import StarRating from './components/StarRating';
+import FavoriteBtn from './components/FavoriteBtn';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { getPlaceById } from './services/placesApi';
 import {
@@ -777,22 +778,7 @@ export default function SitioDetailPage({
                     </button>
                   )}
                   {isTourist && (
-                    <button
-                      type="button"
-                      onClick={handleToggleFavorite}
-                      disabled={favoriteLoading}
-                      className={`inline-flex h-12 w-12 items-center justify-center rounded-full ring-1 backdrop-blur transition ${
-                        isFavorite
-                          ? 'bg-emerald-600 text-white ring-emerald-200'
-                          : 'bg-white/85 text-emerald-700 ring-white/60 hover:bg-white'
-                      } ${favoriteLoading ? 'opacity-70' : ''}`}
-                      aria-label="Guardar en favoritos"
-                      title="Guardar en favoritos"
-                    >
-                      <svg className="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                        <path d="M19 21l-7-5-7 5V5a2 2 0 012-2h10a2 2 0 012 2z" />
-                      </svg>
-                    </button>
+                    <FavoriteBtn isFavorite={isFavorite} isLoading={favoriteLoading} onToggle={handleToggleFavorite} />
                   )}
                 </div>
               </div>
