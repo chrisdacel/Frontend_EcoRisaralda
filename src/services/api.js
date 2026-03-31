@@ -237,3 +237,104 @@ export async function checkFirstTimePreferences() {
     return false;
   }
 }
+// ============ VISITAS Y NOTIFICACIONES ============
+/**
+ * Registrar visita a un lugar
+ */
+export async function logPlaceVisit(placeId) {
+  try {
+    const { data } = await api.post(`/api/places/${placeId}/visit`);
+    return data;
+  } catch (error) {
+    throw error.response?.data || { message: 'Error registrando visita' };
+  }
+}
+
+/**
+ * Marcar notificación como leída
+ */
+export async function markNotificationRead(notificationId) {
+  try {
+    const { data } = await api.post(`/api/notifications/${notificationId}/read`);
+    return data;
+  } catch (error) {
+    throw error.response?.data || { message: 'Error al marcar notificacion' };
+  }
+}
+
+// ============ RESEÑAS Y COMENTARIOS ============
+/**
+ * Crear reseña en un sitio (requiere autenticación)
+ * @param {number} placeId - ID del sitio
+ * @param {number} rating - Calificación (1-5)
+ * @param {string} comment - Comentario
+ */
+export async function createReview(placeId, rating, comment) {
+  try {
+    const { data } = await api.post(`/api/places/${placeId}/reviews`, {
+      rating,
+      comment,
+    });
+    return data;
+  } catch (error) {
+    throw error.response?.data || { message: 'Error creando reseña' };
+  }
+}
+
+/**
+ * Actualizar una reseña propia
+ */
+export async function updateReview(reviewId, rating, comment) {
+  try {
+    const { data } = await api.put(`/api/reviews/${reviewId}`, { rating, comment });
+    return data;
+  } catch (error) {
+    throw error.response?.data || { message: 'Error actualizando reseña' };
+  }
+}
+
+/**
+ * Eliminar reseña propia (o como admin)
+ * @param {number} reviewId - ID de la reseña
+ */
+export async function deleteReview(reviewId) {
+  try {
+    const { data } = await api.delete(`/api/reviews/${reviewId}`);
+    return data;
+  } catch (error) {
+    throw error.response?.data || { message: 'Error eliminando reseña' };
+  }
+}
+
+/**
+ * Reaccionar a una reseña (like/dislike)
+ * @param {number} reviewId - ID de la reseña
+ * @param {string} type - 'like' o 'dislike'
+ */
+export async function reactToReview(reviewId, type) {
+  try {
+    const { data } = await api.post(`/api/reviews/${reviewId}/react`, { type });
+    return data;
+  } catch (error) {
+    throw error.response?.data || { message: 'Error agregando reacción' };
+  }
+}
+
+// ============ MODERACIÓN OPERADOR ============
+export async function restrictReviewAsOperator(reviewId, reason = null) {
+  try {
+    const { data } = await api.post(`/api/operator/reviews/${reviewId}/restrict`, {});
+    return data;
+  } catch (error) {
+    throw error.response?.data || { message: 'Error restringiendo reseña' };
+  }
+}
+
+export async function unrestrictReviewAsOperator(reviewId) {
+  try {
+    const { data } = await api.post(`/api/operator/reviews/${reviewId}/unrestrict`);
+    return data;
+  } catch (error) {
+    throw error.response?.data || { message: 'Error desrestringiendo reseña' };
+  }
+}
