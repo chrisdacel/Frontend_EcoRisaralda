@@ -25,11 +25,15 @@ const ColeccionPage = lazy(() => import('./ColeccionPage'));
 // Lazy loaded pages (HU003: Preferencias)
 const PreferencesPage = lazy(() => import('./PreferencesPage'));
 
-// HU006): Importamos la Landing Completa del Sitio
+// HU006: Importamos la Landing Completa del Sitio
 const SitioDetailPage = lazy(() => import('./SitioDetailPage'));
 
 // HU008: Importamos la Página de Favoritos
 const FavoritosPage = lazy(() => import('./FavoritosPage'));
+
+// HU009: Panel de Operador y Formulario Creación/Edición
+const OperatorSitesPage = lazy(() => import('./OperatorSitesPage'));
+const CreateSitioPage = lazy(() => import('./CreateSitioPageLeaflet'));
 
 
 // Protector para no dejar entrar al login si ya estás logueado
@@ -39,6 +43,15 @@ const GuestRoute = ({ children }) => {
     if (user.role === 'admin') return <Navigate to="/admin/dashboard" replace />;
     if (user.role === 'operator') return <Navigate to="/operador/home" replace />;
     return <Navigate to="/turista/home" replace />;
+  }
+  return children;
+};
+
+// HU009: Protector exclusivo para Operadores (y Admins)
+const OperatorRoute = ({ children }) => {
+  const { user } = useAuth();
+  if (!user || (user.role !== 'operator' && user.role !== 'admin')) {
+    return <Navigate to="/login" replace />;
   }
   return children;
 };
@@ -148,6 +161,31 @@ function AppRoutes() {
         {/* (HU008): Ruta temporal de Favoritos del Turista */}
         <Route path="/turista/favoritos" element={<FavoritosPage />} />
 
+        {/* 👉 NUEVO (HU009): Rutas Privadas del Operador */}
+        <Route 
+          path="/operador/mis-sitios" 
+          element={
+            <OperatorRoute>
+              <OperatorSitesPage />
+            </OperatorRoute>
+          } 
+        />
+        <Route 
+          path="/crear-sitio" 
+          element={
+            <OperatorRoute>
+              <CreateSitioPage />
+            </OperatorRoute>
+          } 
+        />
+        <Route 
+          path="/operador/sitio/:id/editar" 
+          element={
+            <OperatorRoute>
+              <CreateSitioPage />
+            </OperatorRoute>
+          } 
+        />
 
         {/* Como aún no hemos migrado el HomePage "/", redirigimos a login temporalmente */}
         <Route path="*" element={<Navigate to="/login" replace />} />
