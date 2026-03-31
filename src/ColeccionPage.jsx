@@ -8,6 +8,9 @@ import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import SitioCard from './components/SitioCard';
 
+// 👉 NUEVO (HU004): Importamos nuestro componente avanzado
+import SearchBar from './components/SearchBar';
+
 // Fix para los iconos de Leaflet en Vite/React
 import markerShadow from 'leaflet/dist/images/marker-shadow.png';
 
@@ -70,10 +73,8 @@ export default function ColeccionPage({ onNavigateHome, onNavigateLogin, onNavig
 
   // Cargar sitios desde la API
   useEffect(() => {
-    // Carga inicial de sitios al montar el componente, cada vez que cambia el usuario o la ruta
     loadSites();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user, location.pathname]);
+  }, [user, location.pathname, loadSites]);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -95,8 +96,6 @@ export default function ColeccionPage({ onNavigateHome, onNavigateLogin, onNavig
       target.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
   }, [location.hash]);
-
-
 
   const isTourist = user && user.role !== 'admin' && user.role !== 'operator';
   const isAdminOrOperator = user && (user.role === 'admin' || user.role === 'operator');
@@ -144,25 +143,19 @@ export default function ColeccionPage({ onNavigateHome, onNavigateLogin, onNavig
         setRandomRecommendations([]);
         return;
       }
-
       if (sitiosAPI.length === 0) return;
-
       const shuffled = [...sitiosAPI].sort(() => Math.random() - 0.5);
       setRandomRecommendations(shuffled);
       return;
     }
-
     if (!isAdminOrOperator && !isGuest) return;
     if (sitiosAPI.length === 0) {
       setRandomRecommendations([]);
       return;
     }
-
     const shuffled = [...sitiosAPI].sort(() => Math.random() - 0.5);
     setRandomRecommendations(shuffled);
   }, [isTourist, isAdminOrOperator, isGuest, recommendations, sitiosAPI]);
-
-
 
   const handleToggleFavorite = async (event, sitioId) => {
     event.stopPropagation();
@@ -171,7 +164,6 @@ export default function ColeccionPage({ onNavigateHome, onNavigateLogin, onNavig
       return;
     }
     if (!isTourist) return;
-
     const isFavorite = favoriteIds.has(sitioId);
     try {
       if (isFavorite) {
@@ -206,10 +198,21 @@ export default function ColeccionPage({ onNavigateHome, onNavigateLogin, onNavig
     return Array.from(tags).sort();
   }, [sitiosAPI]);
 
+  // 👉 NUEVO (HU004): Cálculo inteligente de sugerencias al vuelo (hasta 5)
+  const searchSuggestions = useMemo(() => {
+    if (!searchText.trim()) return [];
+    const lower = searchText.toLowerCase();
+    return sitiosAPI.filter(s => {
+      const nameMatches = (s.name || s.nombre || '').toLowerCase().includes(lower);
+      const textMatches = (s.slogan || s.description || '').toLowerCase().includes(lower) || 
+                          (s.localization || '').toLowerCase().includes(lower);
+      return nameMatches || textMatches;
+    }).slice(0, 5);
+  }, [sitiosAPI, searchText]);
+
   const filteredSitios = useMemo(() => {
     let result = [...sitiosAPI];
-    
-    // 1. Text Search
+    // 1. Text Search (ahora alimentado por el SearchBar optimizado)
     if (searchText.trim()) {
        const lower = searchText.toLowerCase();
        result = result.filter(s => {
@@ -219,7 +222,6 @@ export default function ColeccionPage({ onNavigateHome, onNavigateLogin, onNavig
          return nameMatches || textMatches;
        });
     }
-
     // 2. Tag Filter
     if (selectedTag) {
        result = result.filter(s => {
@@ -228,7 +230,6 @@ export default function ColeccionPage({ onNavigateHome, onNavigateLogin, onNavig
           return tags.includes(selectedTag);
        });
     }
-
     // 3. Sorting
     if (sortBy === 'recent') {
        result.sort((a, b) => new Date(b.created_at || 0) - new Date(a.created_at || 0));
@@ -237,120 +238,46 @@ export default function ColeccionPage({ onNavigateHome, onNavigateLogin, onNavig
     } else if (sortBy === 'za') {
        result.sort((a, b) => (b.name || b.nombre || '').localeCompare(a.name || a.nombre || ''));
     }
-
     return result;
   }, [sitiosAPI, searchText, selectedTag, sortBy]);
 
-  // Datos de sitios
+  // Datos de sitios fake...
   const sitios = [
-    {
-      id: 1,
-      nombre: 'Santuario Fauna Flora Otún',
-      ubicacion: 'Via Pereira- La virginia',
-      imagen: '/images/Pagina_inicio/Santuario-Fauna-Flora-Otun-Quimbaya-Ucumari-13.webp',
-    },
-    {
-      id: 2,
-      nombre: 'Parque Nacional Natural Los Nevados',
-      ubicacion: 'Municipio de Santa Rosa de Cabal',
-      imagen: '/images/Pagina_inicio/Nevado-del-Tolima-WalterV-1024x683.webp',
-    },
-    {
-      id: 3,
-      nombre: 'Termales de Santa Rosa',
-      ubicacion: 'Santa Rosa de Cabal',
-      imagen: '/images/Pagina_inicio/photo-1532185922611-3410b1898a1c.webp',
-    },
-    {
-      id: 4,
-      nombre: 'Valle del Cocora',
-      ubicacion: 'Salento, Quindío',
-      imagen: '/images/Pagina_inicio/Nevado-del-Tolima-WalterV-1024x683.webp',
-    },
-    {
-      id: 5,
-      nombre: 'Guásimo Natural Park',
-      ubicacion: 'Circasia',
-      imagen: '/images/Pagina_inicio/guasimo.webp',
-    },
+    { id: 1, nombre: 'Santuario Fauna Flora Otún', ubicación: 'Via Pereira- La virginia', imagen: '/images/Pagina_inicio/Santuario-Fauna-Flora-Otun-Quimbaya-Ucumari-13.webp' }
   ];
 
   const recomendaciones = [
-    {
-      id: 1,
-      nombre: 'Ecoturismo en Risaralda',
-      imagen: '/images/Pagina_inicio/Santuario-Fauna-Flora-Otun-Quimbaya-Ucumari-13.webp',
-    },
-    {
-      id: 2,
-      nombre: 'Aventura en la Naturaleza',
-      imagen: '/images/Pagina_inicio/Nevado-del-Tolima-WalterV-1024x683.webp',
-    },
-    {
-      id: 3,
-      nombre: 'Paisajes Naturales',
-      imagen: '/images/sitios/Departamento-Risaralda-de-Colombia-10.webp',
-    },
-    {
-      id: 4,
-      nombre: 'Experiencia Única',
-      imagen: '/images/Pagina_inicio/guasimo.webp',
-    },
+    { id: 1, nombre: 'Ecoturismo en Risaralda', imagen: '/images/Pagina_inicio/Santuario-Fauna-Flora-Otun-Quimbaya-Ucumari-13.webp' }
   ];
 
-  // Imágenes del hero (ubica las imágenes adjuntas en estas rutas)
   const heroShots = [
     { id: 'h1', nombre: 'Palmas de cera', imagen: '/images/Coleccion_sitios_ecoturisticos/paisaje_01.webp' },
     { id: 'h2', nombre: 'Bandera de Colombia', imagen: '/images/Coleccion_sitios_ecoturisticos/paisaje_02.webp' },
     { id: 'h3', nombre: 'Colibrí en juncos', imagen: '/images/Coleccion_sitios_ecoturisticos/paisaje_03.webp' },
   ];
 
-  // Inicializar mapa
   useEffect(() => {
     if (isGuest) return;
     if (!mapContainerRef.current || mapRef.current) return;
-
-    const map = L.map(mapContainerRef.current, {
-      scrollWheelZoom: false // Desactivado hasta que se haga clic
-    }).setView([4.8087, -75.6906], 9);
-
-    map.on('click', () => {
-      map.scrollWheelZoom.enable();
-    });
-    map.on('mouseout', () => {
-      map.scrollWheelZoom.disable();
-    });
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      maxZoom: 19,
-      attribution: '&copy; OpenStreetMap',
-    }).addTo(map);
-
+    const map = L.map(mapContainerRef.current, { scrollWheelZoom: false }).setView([4.8087, -75.6906], 9);
+    map.on('click', () => { map.scrollWheelZoom.enable(); });
+    map.on('mouseout', () => { map.scrollWheelZoom.disable(); });
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19, attribution: '&copy; OpenStreetMap' }).addTo(map);
     mapRef.current = map;
     markersLayerRef.current = L.layerGroup().addTo(map);
-
-    return () => {
-      map.remove();
-      mapRef.current = null;
-      markersLayerRef.current = null;
-    };
+    return () => { map.remove(); mapRef.current = null; markersLayerRef.current = null; };
   }, [isGuest]);
 
-  // Pintar pines en el mapa cuando cambian los sitios
   useEffect(() => {
     if (isGuest) return;
     if (!mapRef.current || !markersLayerRef.current) return;
-
     const layer = markersLayerRef.current;
     layer.clearLayers();
-
     const customPin = L.divIcon({
       className: 'custom-pin',
       html: `<div style="width: 20px; height: 20px; background-color: #059669; border: 3px solid white; border-radius: 50%; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -2px rgba(0, 0, 0, 0.3);"></div>`,
-      iconSize: [24, 24],
-      iconAnchor: [12, 12],
-      popupAnchor: [0, -12]
+      iconSize: [24, 24], iconAnchor: [12, 12], popupAnchor: [0, -12]
     });
-
     const bounds = [];
     sitiosAPI.forEach((sitio) => {
       const lat = parseFloat(sitio.lat);
@@ -361,31 +288,17 @@ export default function ColeccionPage({ onNavigateHome, onNavigateLogin, onNavig
         const badgesHtml = labelsList.filter(Boolean).slice(0, 3).map(labelObj => {
           const name = labelObj?.name || (typeof labelObj === 'string' ? labelObj : null);
           if (!name || name === 'Sin etiquetas') return '';
-          
-          let color = '#059669'; // default green
-          if (labelObj?.color) {
-            color = labelObj.color.startsWith('#') ? labelObj.color : `#${labelObj.color}`;
-          }
-          
-          // Match SitioDetailPage styles: bg 15% (26), border 40% (66)
-          let bgColor = color + '26';
-          let borderColor = color + '66';
-          
+          let color = '#059669'; 
+          if (labelObj?.color) color = labelObj.color.startsWith('#') ? labelObj.color : `#${labelObj.color}`;
+          let bgColor = color + '26'; let borderColor = color + '66';
           return `<span style="color: ${color}; background-color: ${bgColor}; border: 1px solid ${borderColor}; font-size: 10px; font-weight: 600; padding: 2px 8px; border-radius: 9999px; white-space: nowrap;">${name}</span>`;
         }).join('');
-        
         const labelsContainerHtml = badgesHtml ? `<div style="display:flex; flex-wrap:wrap; gap:4px; justify-content:center; margin-top:2px;">${badgesHtml}</div>` : '';
-
-        // Mostrar imagen debajo del nombre
         let imageUrl = '';
-        // Prioridad: cover > portada > imagen
-        if (sitio.cover) {
-          imageUrl = sitio.cover.startsWith('http') ? sitio.cover : `${import.meta.env.VITE_API_URL}/api/files/${sitio.cover}`;
-        } else if (sitio.portada) {
-          imageUrl = sitio.portada.startsWith('http') ? sitio.portada : `${import.meta.env.VITE_API_URL}/api/files/${sitio.portada}`;
-        } else if (sitio.imagen) {
-          imageUrl = sitio.imagen.startsWith('http') ? sitio.imagen : `${import.meta.env.VITE_API_URL}/api/files/${sitio.imagen}`;
-        }
+        if (sitio.cover) imageUrl = sitio.cover.startsWith('http') ? sitio.cover : `${import.meta.env.VITE_API_URL}/api/files/${sitio.cover}`;
+        else if (sitio.portada) imageUrl = sitio.portada.startsWith('http') ? sitio.portada : `${import.meta.env.VITE_API_URL}/api/files/${sitio.portada}`;
+        else if (sitio.imagen) imageUrl = sitio.imagen.startsWith('http') ? sitio.imagen : `${import.meta.env.VITE_API_URL}/api/files/${sitio.imagen}`;
+        
         const popupHtml = `
           <div class="popup-card" style="display:flex;flex-direction:column;gap:6px;cursor:pointer;max-width:220px;align-items:center;">
             <strong style="font-size:14px;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:200px;display:block;">${sitio.name || 'Sitio'}</strong>
@@ -400,13 +313,9 @@ export default function ColeccionPage({ onNavigateHome, onNavigateLogin, onNavig
           if (card && !card.dataset.bound) {
             card.dataset.bound = 'true';
             card.addEventListener('click', () => {
-              if (user?.role === 'admin') {
-                navigate(`/admin/sitio/${sitio.id}`);
-              } else if (user && user.role !== 'operator') {
-                navigate(`/turista/sitio/${sitio.id}`);
-              } else {
-                navigate(`/sitio/${sitio.id}`);
-              }
+              if (user?.role === 'admin') navigate(`/admin/sitio/${sitio.id}`);
+              else if (user && user.role !== 'operator') navigate(`/turista/sitio/${sitio.id}`);
+              else navigate(`/sitio/${sitio.id}`);
             });
           }
         });
@@ -415,26 +324,8 @@ export default function ColeccionPage({ onNavigateHome, onNavigateLogin, onNavig
       }
     });
 
-    if (bounds.length > 0) {
-      mapRef.current.fitBounds(bounds, { padding: [30, 30] });
-    }
-  }, [sitiosAPI, isGuest]);
-
-  const handleCarouselNext = (index) => {
-    const newIndices = [...carouselIndex];
-    if (newIndices[index] < sitios.length - 4) {
-      newIndices[index]++;
-      setCarouselIndex(newIndices);
-    }
-  };
-
-  const handleCarouselPrev = (index) => {
-    const newIndices = [...carouselIndex];
-    if (newIndices[index] > 0) {
-      newIndices[index]--;
-      setCarouselIndex(newIndices);
-    }
-  };
+    if (bounds.length > 0) mapRef.current.fitBounds(bounds, { padding: [30, 30] });
+  }, [sitiosAPI, isGuest, navigate, user]);
 
   const baseFallback = recommendations.length === 0 ? randomRecommendations : sitiosAPI;
   const fallbackRecommendations = baseFallback.filter((item) => item?.id && !recommendations.some((rec) => rec.id === item.id));
@@ -449,15 +340,12 @@ export default function ColeccionPage({ onNavigateHome, onNavigateLogin, onNavig
         {/* Sección 1: Hero con trío de imágenes y buscador */}
         <section className="relative w-full pt-16 pb-28 sm:py-16 md:py-12 lg:py-20 coleccion-hero z-40">
           <div className="relative z-10 flex flex-col items-center gap-12 px-6 xl:flex-row xl:items-center xl:justify-center xl:gap-16 2xl:gap-24 md:px-12 max-w-[1536px] mx-auto">
-            {/* Izquierda: trío de imágenes verticales */}
+            
             <div className="w-full xl:w-auto flex justify-center">
               <div className="flex w-full md:w-auto gap-4 lg:gap-6 xl:gap-8 justify-center">
                 {heroShots.map((shot, idx) => (
                   <div key={shot.id} className="flex items-end w-[30vw] sm:w-[130px] md:w-[150px] lg:w-[180px] xl:w-[210px]">
-                    <img fetchpriority="high" decoding="async"
-                      src={shot.imagen}
-                      alt={shot.nombre}
-                      style={{ opacity: 0, transition: `opacity 0.8s ease ${idx * 0.2}s, transform 0.8s ease ${idx * 0.2}s`, transform: 'translateY(18px)' }}
+                    <img fetchpriority="high" decoding="async" src={shot.imagen} alt={shot.nombre} style={{ opacity: 0, transition: `opacity 0.8s ease ${idx * 0.2}s, transform 0.8s ease ${idx * 0.2}s`, transform: 'translateY(18px)' }}
                       onLoad={(e) => { e.currentTarget.style.opacity = '1'; e.currentTarget.style.transform = 'translateY(0)'; }}
                       className={`object-cover rounded-[18px] sm:rounded-[22px] shadow-lg w-full h-[220px] min-[400px]:h-[320px] md:h-[260px] lg:h-[440px] xl:h-[480px] ${idx === 1 ? 'h-[240px] min-[400px]:h-[340px] md:h-[290px] lg:h-[470px] xl:h-[510px]' : ''}`}
                     />
@@ -466,76 +354,46 @@ export default function ColeccionPage({ onNavigateHome, onNavigateLogin, onNavig
               </div>
             </div>
 
-            {/* Derecha: Título y Buscador */}
-            <div className="relative z-10 w-full xl:w-[500px] flex flex-col items-center xl:items-start gap-6 xl:gap-8 shrink-0">
+            {/* Derecha: Título y Buscador Avanzado */}
+            <div className="relative z-[60] w-full xl:w-[500px] flex flex-col items-center xl:items-start gap-6 xl:gap-8 shrink-0">
               <div className="text-center xl:text-left space-y-2">
                 <h1 className="text-3xl min-[400px]:text-4xl md:text-3xl lg:text-5xl font-bold text-slate-900 leading-tight">Explora y conecta con la naturaleza</h1>
                 <p className="text-slate-700 md:text-sm lg:text-base">Busca sitios, actividades y experiencias sostenibles.</p>
               </div>
               
-              {/* Contenedor con max-w-[500px] para encoger tamaño global del buscador y filtros */}
               <div className="flex flex-col gap-3 md:gap-4 w-full max-w-[500px]">
-                {/* Search bar */}
-                <div className="flex items-center gap-2 rounded-full border border-emerald-200 bg-white px-4 py-2 w-full min-h-[44px] shadow-sm">
-                  <svg className="h-4 w-4 text-emerald-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-4.35-4.35m1.6-4.15a7.75 7.75 0 11-15.5 0 7.75 7.75 0 0115.5 0z" />
-                  </svg>
-                  <input
-                    type="text"
-                    value={searchText}
-                    onChange={(e) => setSearchText(e.target.value)}
-                    placeholder="Buscar destinos..."
-                    className="w-full bg-transparent text-sm text-slate-700 placeholder-slate-400 outline-none"
-                  />
-                </div>
                 
-                {/* Filters */}
-                <div className="flex flex-col sm:flex-row gap-3 md:gap-4 w-full">
+                {/* 👉 NUEVO (HU004): Inyectamos el Componente Inteligente aquí */}
+                <SearchBar 
+                  onSearch={(val) => setSearchText(val)}
+                  suggestions={searchSuggestions}
+                  onSelectSuggestion={(item) => setSearchText(item.nombre || item.name || '')}
+                />
+                
+                {/* Filters Menu */}
+                <div className="flex flex-col sm:flex-row gap-3 md:gap-4 w-full relative z-[50]">
                   <div className="relative flex-1" ref={tagMenuRef}>
-                    <button
-                      type="button"
-                      onClick={() => setTagMenuOpen((prev) => !prev)}
-                      className="inline-flex w-full items-center justify-between gap-2 rounded-full bg-white px-4 py-2 text-sm text-slate-700 ring-1 ring-emerald-200 transition hover:bg-emerald-50 shadow-sm"
-                    >
+                    <button type="button" onClick={() => setTagMenuOpen((prev) => !prev)} className="inline-flex w-full items-center justify-between gap-2 rounded-full bg-white px-4 py-2 text-sm text-slate-700 ring-1 ring-emerald-200 transition hover:bg-emerald-50 shadow-sm">
                       <span className="truncate">{selectedTag || 'Todas las etiquetas'}</span>
-                      <svg className={`h-4 w-4 shrink-0 transition-transform duration-200 ${tagMenuOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                      </svg>
+                      <svg className={`h-4 w-4 shrink-0 transition-transform duration-200 ${tagMenuOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
                     </button>
                     {tagMenuOpen && (
-                      <div className="absolute left-0 right-0 mt-2 rounded-xl bg-white text-slate-800 shadow-lg ring-1 ring-slate-200/60 dropdown-open z-[99] max-h-[80px] sm:max-h-[180px] overflow-y-auto scrollbar-thin scrollbar-thumb-emerald-200">
-                        <button
-                          type="button"
-                          onClick={() => { setSelectedTag(''); setTagMenuOpen(false); }}
-                          className="w-full px-4 py-2 text-left text-sm transition-colors hover:bg-slate-100 hover:text-emerald-500"
-                        >Todas las etiquetas</button>
+                      <div className="absolute left-0 right-0 mt-2 rounded-xl bg-white text-slate-800 shadow-lg ring-1 ring-slate-200/60 dropdown-open max-h-[80px] sm:max-h-[180px] overflow-y-auto scrollbar-thin scrollbar-thumb-emerald-200">
+                        <button type="button" onClick={() => { setSelectedTag(''); setTagMenuOpen(false); }} className="w-full px-4 py-2 text-left text-sm transition-colors hover:bg-slate-100 hover:text-emerald-500">Todas las etiquetas</button>
                         {uniqueTags.map(tag => (
-                          <button
-                            key={tag}
-                            type="button"
-                            onClick={() => { setSelectedTag(tag); setTagMenuOpen(false); }}
-                            className="w-full px-4 py-2 text-left text-sm transition-colors hover:bg-slate-100 hover:text-emerald-500"
-                          >{tag}</button>
+                          <button key={tag} type="button" onClick={() => { setSelectedTag(tag); setTagMenuOpen(false); }} className="w-full px-4 py-2 text-left text-sm transition-colors hover:bg-slate-100 hover:text-emerald-500">{tag}</button>
                         ))}
                       </div>
                     )}
                   </div>
 
                   <div className="relative flex-1" ref={sortMenuRef}>
-                    <button
-                      type="button"
-                      onClick={() => setSortMenuOpen((prev) => !prev)}
-                      className="inline-flex w-full items-center justify-between gap-2 rounded-full bg-white px-4 py-2 text-sm text-slate-700 ring-1 ring-emerald-200 transition hover:bg-emerald-50 shadow-sm"
-                    >
-                      <span className="truncate">
-                        {sortBy === 'recent' ? 'Más recientes' : sortBy === 'az' ? 'A - Z' : 'Z - A'}
-                      </span>
-                      <svg className={`h-4 w-4 shrink-0 transition-transform duration-200 ${sortMenuOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                      </svg>
+                    <button type="button" onClick={() => setSortMenuOpen((prev) => !prev)} className="inline-flex w-full items-center justify-between gap-2 rounded-full bg-white px-4 py-2 text-sm text-slate-700 ring-1 ring-emerald-200 transition hover:bg-emerald-50 shadow-sm">
+                      <span className="truncate">{sortBy === 'recent' ? 'Más recientes' : sortBy === 'az' ? 'A - Z' : 'Z - A'}</span>
+                      <svg className={`h-4 w-4 shrink-0 transition-transform duration-200 ${sortMenuOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
                     </button>
                     {sortMenuOpen && (
-                      <div className="absolute left-0 right-0 mt-2 rounded-xl overflow-hidden bg-white text-slate-800 shadow-lg ring-1 ring-slate-200/60 dropdown-open z-[99] max-h-[80px] sm:max-h-[180px] overflow-y-auto scrollbar-thin scrollbar-thumb-emerald-200">
+                      <div className="absolute left-0 right-0 mt-2 rounded-xl overflow-hidden bg-white text-slate-800 shadow-lg ring-1 ring-slate-200/60 dropdown-open max-h-[80px] sm:max-h-[180px] overflow-y-auto scrollbar-thin scrollbar-thumb-emerald-200">
                         <button type="button" onClick={() => { setSortBy('recent'); setSortMenuOpen(false); }} className="w-full px-4 py-2 text-left text-sm transition-colors hover:bg-slate-100 hover:text-emerald-500">Más recientes</button>
                         <button type="button" onClick={() => { setSortBy('az'); setSortMenuOpen(false); }} className="w-full px-4 py-2 text-left text-sm transition-colors hover:bg-slate-100 hover:text-emerald-500">A - Z</button>
                         <button type="button" onClick={() => { setSortBy('za'); setSortMenuOpen(false); }} className="w-full px-4 py-2 text-left text-sm transition-colors hover:bg-slate-100 hover:text-emerald-500">Z - A</button>
@@ -545,6 +403,7 @@ export default function ColeccionPage({ onNavigateHome, onNavigateLogin, onNavig
                 </div>
               </div>
             </div>
+
           </div>
         </section>
 
@@ -617,27 +476,20 @@ export default function ColeccionPage({ onNavigateHome, onNavigateLogin, onNavig
                 type="button"
                 onClick={() => document.getElementById('recomendaciones-scroll')?.scrollBy({ left: -340, behavior: 'smooth' })}
                 className="grid place-items-center w-10 h-8 px-2 text-emerald-600/60 hover:bg-emerald-50 hover:text-emerald-600 focus:outline-none focus:bg-emerald-50 transition"
-                aria-label="Anterior recomendación"
               >
-                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
-                </svg>
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}><path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" /></svg>
               </button>
               <div className="w-[1px] h-4 bg-emerald-100/60"></div>
               <button 
                 type="button"
                 onClick={() => document.getElementById('recomendaciones-scroll')?.scrollBy({ left: 340, behavior: 'smooth' })}
                 className="grid place-items-center w-10 h-8 px-2 text-emerald-600/60 hover:bg-emerald-50 hover:text-emerald-600 focus:outline-none focus:bg-emerald-50 transition"
-                aria-label="Siguiente recomendación"
               >
-                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-                </svg>
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}><path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" /></svg>
               </button>
             </div>
           </div>
 
-          {/* Carril con scroll horizontal y snap */}
           <div id="recomendaciones-scroll" className="overflow-x-auto scrollbar-none px-6 md:px-12">
             <div className="flex gap-6 md:gap-8 snap-x snap-mandatory pr-6 md:pr-12">
               {recommendationsLoading ? (
@@ -651,25 +503,13 @@ export default function ColeccionPage({ onNavigateHome, onNavigateLogin, onNavig
                     className="group relative shrink-0 snap-start w-[260px] sm:w-[300px] md:w-[340px] aspect-[9/16] rounded-[26px] overflow-hidden shadow-xl cursor-pointer stagger-item"
                     style={{ '--stagger-delay': `${Math.min(index, 10) * 50}ms` }}
                     onClick={() => {
-                      if (user?.role === 'admin') {
-                        navigate(`/admin/sitio/${rec.id}`);
-                      } else if (user && user.role !== 'operator') {
-                        navigate(`/turista/sitio/${rec.id}`);
-                      } else {
-                        navigate(`/sitio/${rec.id}`);
-                      }
+                      if (user?.role === 'admin') navigate(`/admin/sitio/${rec.id}`);
+                      else if (user && user.role !== 'operator') navigate(`/turista/sitio/${rec.id}`);
+                      else navigate(`/sitio/${rec.id}`);
                     }}
                   >
-                    {/* Imagen */}
-                    <img loading={index < 3 ? "eager" : "lazy"} decoding="async"
-                      src={rec.imagen || storageUrl(rec.cover)}
-                      alt={rec.nombre || rec.name}
-                      className="absolute inset-0 h-full w-full object-cover rounded-[26px] origin-center transform transition-transform duration-700 ease-out group-hover:scale-105"
-                    />
-
-                    {/* Gradiente y contenido que aparecen en hover */}
+                    <img loading={index < 3 ? "eager" : "lazy"} decoding="async" src={rec.imagen || storageUrl(rec.cover)} alt={rec.nombre || rec.name} className="absolute inset-0 h-full w-full object-cover rounded-[26px] origin-center transform transition-transform duration-700 ease-out group-hover:scale-105" />
                     <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/70 via-black/40 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100 rounded-[26px]" />
-
                     <div className="absolute inset-0 flex flex-col justify-between p-5 opacity-0 transition-opacity duration-300 group-hover:opacity-100 rounded-[26px]">
                       <div className="relative z-10 space-y-1 text-white">
                         <p className="text-white/80 text-xs font-semibold">Recomendado</p>
@@ -678,16 +518,9 @@ export default function ColeccionPage({ onNavigateHome, onNavigateLogin, onNavig
                       </div>
                       <div className="relative z-10 flex items-center justify-between">
                         <div className="flex flex-wrap gap-2">
-                          {(Array.isArray(rec.label) && rec.label.length > 0 ? rec.label : [{ id: 'none', name: 'Sin etiquetas' }])
-                            .slice(0, 3)
-                            .map((label, idx) => (
-                              <span
-                                key={label.id ?? `${rec.id}-label-${idx}`}
-                                className="rounded-full bg-white/20 text-white text-xs px-3 py-1 backdrop-blur"
-                              >
-                                {label.name || 'Etiqueta'}
-                              </span>
-                            ))}
+                          {(Array.isArray(rec.label) && rec.label.length > 0 ? rec.label : [{ id: 'none', name: 'Sin etiquetas' }]).slice(0, 3).map((label, idx) => (
+                              <span key={label.id ?? `${rec.id}-label-${idx}`} className="rounded-full bg-white/20 text-white text-xs px-3 py-1 backdrop-blur">{label.name || 'Etiqueta'}</span>
+                          ))}
                         </div>
                         <button className="grid place-items-center h-8 w-8 rounded-full bg-black/40 text-white backdrop-blur hover:bg-black/60 transition">+</button>
                       </div>
@@ -722,15 +555,7 @@ export default function ColeccionPage({ onNavigateHome, onNavigateLogin, onNavig
         )}
       </main>
 
-      {/* Footer (estilo Home) */}
-      <Footer 
-        onNavigateSobreNosotros={() => window.location.href = '/sobre-nosotros'}
-        onNavigatePrivacidad={() => window.location.href = '/privacidad'}
-        onNavigateQueOfrecemos={() => window.location.href = '/que-ofrecemos'}
-        onNavigateColeccion={() => window.location.href = '/coleccion'}
-        onNavigateLogin={() => window.location.href = '/login'}
-        onNavigateInicio={() => window.location.href = '/'}
-      />
+      <Footer onNavigateSobreNosotros={() => window.location.href = '/sobre-nosotros'} onNavigatePrivacidad={() => window.location.href = '/privacidad'} onNavigateQueOfrecemos={() => window.location.href = '/que-ofrecemos'} onNavigateColeccion={() => window.location.href = '/coleccion'} onNavigateLogin={() => window.location.href = '/login'} onNavigateInicio={() => window.location.href = '/'} />
     </div>
   );
 }
