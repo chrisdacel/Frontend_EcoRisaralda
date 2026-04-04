@@ -338,3 +338,13 @@ export async function unrestrictReviewAsOperator(reviewId) {
     throw error.response?.data || { message: 'Error desrestringiendo reseña' };
   }
 }
+
+/* Obtener estadísticas consolidadas del operador (requiere autenticación) */
+export async function fetchOperatorStats() {
+  try {
+    const { data } = await api.get('/api/operator/stats');
+    return data;
+  } catch (error) {
+    throw error.response?.data || { message: 'Error cargando estadisticas' };
+  }
+}
