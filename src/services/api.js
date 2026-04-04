@@ -348,3 +348,70 @@ export async function fetchOperatorStats() {
     throw error.response?.data || { message: 'Error cargando estadisticas' };
   }
 }
+
+// ============ PERFIL DE USUARIO ============
+
+export async function fetchProfile() {
+  try {
+    const { data } = await api.get('/api/profile');
+    return data;
+  } catch (error) {
+    throw error.response?.data || { message: 'Error obteniendo perfil' };
+  }
+}
+
+export async function updateProfile(payload) {
+  try {
+    await initializeCsrfToken();
+    const { data } = await api.put('/api/profile', payload);
+    return data.user;
+  } catch (error) {
+    throw error.response?.data || { message: 'Error actualizando perfil' };
+  }
+}
+
+export async function changePassword(current_password, password, password_confirmation) {
+  try {
+    await initializeCsrfToken();
+    const { data } = await api.post('/api/profile/password', {
+      current_password, password, password_confirmation,
+    });
+    return data.message;
+  } catch (error) {
+    throw error.response?.data || { message: 'Error actualizando contraseña' };
+  }
+}
+
+// Envío Multipart para el Archivo de Foto
+export async function uploadAvatar(file) {
+  const formData = new FormData();
+  formData.append('avatar', file); // Creación directa de formato de archivo
+
+  try {
+    await initializeCsrfToken();
+    const { data } = await api.post('/api/profile/avatar', formData);
+    return data;
+  } catch (error) {
+    throw error.response?.data || { message: 'Error subiendo foto' };
+  }
+}
+
+export async function deleteAvatar() {
+  try {
+    await initializeCsrfToken();
+    const { data } = await api.delete('/api/profile/avatar');
+    return data;
+  } catch (error) {
+    throw error.response?.data || { message: 'Error eliminando foto' };
+  }
+}
+
+export async function deleteAccount(current_password) {
+  try {
+    await initializeCsrfToken();
+    const { data } = await api.post('/api/profile/delete', { current_password });
+    return data.message || 'Cuenta eliminada';
+  } catch (error) {
+    throw error.response?.data || { message: 'Error eliminando cuenta' };
+  }
+}
