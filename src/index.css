@@ -46,6 +46,7 @@
   background-color: #f8fafc;
 }
 
+/* Scroll behavior */
 html {
   scroll-behavior: smooth;
   overflow-x: hidden;
@@ -59,6 +60,7 @@ a {
   text-decoration: none;
 }
 
+/* Body */
 body {
   margin: 0;
   overflow-x: hidden;
@@ -66,6 +68,7 @@ body {
   min-height: 100%;
 }
 
+  
 #root {
   min-height: 100%;
   overflow-x: hidden;
@@ -406,7 +409,7 @@ html.readable-font * {
   word-spacing: 0.05em !important;
 }
 
-/* Ocultar botones flotantes cuando el menú móvil estÃ¡ abierto */
+/* Ocultar botones flotantes cuando el menú móvil esté abierto */
 body.mobile-menu-open #accessibility-widget,
 body.mobile-menu-open #scroll-to-top-widget {
   opacity: 0 !important;
