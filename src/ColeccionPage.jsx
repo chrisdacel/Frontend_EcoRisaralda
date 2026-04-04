@@ -9,6 +9,7 @@ import SearchBar from './components/SearchBar';
 
 // (HU005): Importamos nuestro Componente Cartográfico Limpio
 import InteractiveMap from './components/InteractiveMap';
+import RecomendacionesCarrusel from './components/RecomendacionesCarrusel';
 
 export default function ColeccionPage({ onNavigateHome, onNavigateLogin, onNavigatePrivacidad, onNavigateSobreNosotros }) {
   const navigate = useNavigate();
@@ -258,78 +259,12 @@ export default function ColeccionPage({ onNavigateHome, onNavigateLogin, onNavig
           </div>
         </section>
 
-        {/* Sección 2: Sitios */}
-        <section className="w-full bg-white py-16 px-4 sm:px-8 md:px-0 relative">
-            <div className="px-6 md:px-12 mb-8 flex flex-col md:flex-row md:items-center md:justify-between gap-2 md:gap-0">
-              <h2 className="text-3xl font-bold">Sitios Ecoturísticos</h2>
-              {(user?.role === 'admin' || user?.role === 'operator') && (
-                <button onClick={() => navigate('/crear-sitio')} className="rounded-full bg-emerald-500 px-3 py-1.5 text-sm font-semibold text-white hover:bg-emerald-600 transition md:px-6 md:py-3 md:text-lg">
-                  + Crear Sitio
-                </button>
-              )}
-            </div>
-
-            {loading ? (
-              <div className="flex justify-center py-12"><div className="h-8 w-8 animate-spin rounded-full border-4 border-emerald-400/30 border-t-emerald-400"></div></div>
-            ) : filteredSitios.length === 0 ? (
-              <div className="px-6 md:px-12 py-12 text-center text-rose-600 font-semibold">
-                No hay sitios disponibles para mostrar según los filtros seleccionados.<br />
-                {apiError && <span className="block text-xs text-rose-700 mt-2">{apiError}</span>}
-                <span className="block text-xs text-slate-500 mt-2">(Intenta limpiar tu búsqueda o selecciona otra etiqueta.)</span>
-              </div>
-            ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 px-6 md:px-12">
-                {filteredSitios.map((sitio, index) => (
-                  <SitioCard key={sitio.id} sitio={sitio} index={index} user={user} isTourist={isTourist} isGuest={isGuest} isFavorite={favoriteIds.has(sitio.id)} onToggleFavorite={handleToggleFavorite} onNavigate={navigate} />
-                ))}
-              </div>
-            )}
-        </section>
-
-        {sitiosAPI.length === 0 && !loading && searchText.trim() === '' && (user?.role === 'admin' || user?.role === 'operator') && (
-          <section className="w-full bg-white py-16 px-6 md:px-12">
-            <div className="max-w-2xl mx-auto text-center space-y-4">
-              <h2 className="text-3xl font-bold text-slate-900">Aún no hay sitios creados</h2>
-              <p className="text-slate-600">Sé el primero en agregar un sitio ecoturístico</p>
-              <button onClick={() => navigate('/crear-sitio')} className="rounded-full bg-emerald-500 px-8 py-4 font-semibold text-white hover:bg-emerald-600 transition">+ Crear Primer Sitio</button>
-            </div>
-          </section>
-        )}
-
         {/* Sección 3: Recomendaciones */}
-        <section id="recomendaciones" className="w-full bg-white py-16 pb-20 px-0 md:px-0">
-          <div className="mb-8 px-6 md:px-12 flex items-center justify-between">
-            <h2 className="text-3xl font-bold">Recomendaciones</h2>
-            <div className="flex items-center rounded-full border border-emerald-100 bg-white shadow-sm overflow-hidden">
-              <button type="button" onClick={() => document.getElementById('recomendaciones-scroll')?.scrollBy({ left: -340, behavior: 'smooth' })} className="grid place-items-center w-10 h-8 px-2 text-emerald-600/60 hover:bg-emerald-50 transition"><svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}><path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" /></svg></button>
-              <div className="w-[1px] h-4 bg-emerald-100/60"></div>
-              <button type="button" onClick={() => document.getElementById('recomendaciones-scroll')?.scrollBy({ left: 340, behavior: 'smooth' })} className="grid place-items-center w-10 h-8 px-2 text-emerald-600/60 hover:bg-emerald-50 transition"><svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}><path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" /></svg></button>
-            </div>
-          </div>
-          <div id="recomendaciones-scroll" className="overflow-x-auto scrollbar-none px-6 md:px-12">
-            <div className="flex gap-6 md:gap-8 snap-x snap-mandatory pr-6 md:pr-12">
-              {recommendationsLoading ? (
-                <div className="text-sm text-slate-600">Cargando recomendaciones...</div>
-              ) : recommendedList.length === 0 ? (
-                <div className="text-sm text-slate-600">No hay recomendaciones disponibles.</div>
-              ) : (
-                recommendedList.map((rec, index) => (
-                  <article key={rec.id} className="group relative shrink-0 snap-start w-[260px] sm:w-[300px] md:w-[340px] aspect-[9/16] rounded-[26px] overflow-hidden shadow-xl cursor-pointer stagger-item" style={{ '--stagger-delay': `${Math.min(index, 10) * 50}ms` }} onClick={() => { if (user?.role === 'admin') navigate(`/admin/sitio/${rec.id}`); else if (user && user.role !== 'operator') navigate(`/turista/sitio/${rec.id}`); else navigate(`/sitio/${rec.id}`); }}>
-                    <img loading={index < 3 ? "eager" : "lazy"} decoding="async" src={rec.imagen || storageUrl(rec.cover)} alt={rec.nombre || rec.name} className="absolute inset-0 h-full w-full object-cover rounded-[26px] origin-center transform transition-transform duration-700 ease-out group-hover:scale-105" />
-                    <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/70 via-black/40 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100 rounded-[26px]" />
-                    <div className="absolute inset-0 flex flex-col justify-between p-5 opacity-0 transition-opacity duration-300 group-hover:opacity-100 rounded-[26px]">
-                      <div className="relative z-10 space-y-1 text-white"><p className="text-white/80 text-xs font-semibold">Recomendado</p><h3 className="text-2xl font-bold leading-tight">{shortText(rec.nombre || rec.name, 38)}</h3><p className="text-sm">{shortText(rec.slogan || 'Explora este destino increíble', 84)}</p></div>
-                      <div className="relative z-10 flex items-center justify-between">
-                        <div className="flex flex-wrap gap-2">{(Array.isArray(rec.label) && rec.label.length > 0 ? rec.label : [{ id: 'none', name: 'Sin etiquetas' }]).slice(0, 3).map((label, idx) => (<span key={label.id ?? `${rec.id}-label-${idx}`} className="rounded-full bg-white/20 text-white text-xs px-3 py-1 backdrop-blur">{label.name || 'Etiqueta'}</span>))}</div>
-                        <button className="grid place-items-center h-8 w-8 rounded-full bg-black/40 text-white backdrop-blur hover:bg-black/60 transition">+</button>
-                      </div>
-                    </div>
-                  </article>
-                ))
-              )}
-            </div>
-          </div>
-        </section>
+        <RecomendacionesCarrusel 
+            loading={recommendationsLoading} 
+            list={recommendedList} 
+            user={user} 
+        />
 
         {/* (HU005): Sección Cartográfica Extremadamente Limpia */}
         <section className="w-full bg-white pb-20">
