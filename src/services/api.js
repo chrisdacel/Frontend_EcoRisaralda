@@ -415,3 +415,67 @@ export async function deleteAccount(current_password) {
     throw error.response?.data || { message: 'Error eliminando cuenta' };
   }
 }
+
+// ============ REPOSITORIO DE FUNCIONES EXTRAVIADAS ============
+export async function fetchPlaces() {
+  try {
+    const { data } = await api.get('/api/places');
+    return data;
+  } catch (error) {
+    throw error.response?.data || { message: 'Error obteniendo sitios' };
+  }
+}
+
+export async function fetchPlace(id) {
+  try {
+    const { data } = await api.get(`/api/places/${id}`);
+    return data;
+  } catch (error) {
+    throw error.response?.data || { message: 'Error obteniendo sitio' };
+  }
+}
+
+export async function fetchNextEvent() {
+  try {
+    const { data } = await api.get('/api/events/next');
+    return data?.event || null;
+  } catch (error) {
+    throw error.response?.data || { message: 'Error obteniendo evento' };
+  }
+}
+
+export async function fetchUpcomingEvents(limit = 5) {
+  try {
+    const { data } = await api.get('/api/events/upcoming', { params: { limit } });
+    return Array.isArray(data?.events) ? data.events : [];
+  } catch (error) {
+    throw error.response?.data || { message: 'Error obteniendo eventos' };
+  }
+}
+
+export async function fetchPublicEvent(eventId) {
+  try {
+    const { data } = await api.get(`/api/events/${eventId}`);
+    return data;
+  } catch (error) {
+    throw error.response?.data || { message: 'No se pudo cargar el evento' };
+  }
+}
+
+export async function fetchUserHistory(limit = 8) {
+  try {
+    const { data } = await api.get('/api/user/history', { params: { limit } });
+    return data;
+  } catch (error) {
+    throw error.response?.data || { message: 'Error obteniendo historial' };
+  }
+}
+
+export async function fetchUserReviews(limit = 8) {
+  try {
+    const { data } = await api.get('/api/user/reviews', { params: { limit } });
+    return data;
+  } catch (error) {
+    throw error.response?.data || { message: 'Error obteniendo comentarios' };
+  }
+}

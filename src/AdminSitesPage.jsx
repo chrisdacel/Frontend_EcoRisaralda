@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { fetchUserPlaces, api } from './services/api';
+import { api } from './services/api';
+import { getAdminPlaces } from './services/adminApi';
 import Alert from './components/Alert';
 import ConfirmDialog from './components/ConfirmDialog';
 import Pagination from './components/Pagination';
@@ -35,7 +36,7 @@ export default function AdminSitesPage() {
     setLoading(true);
     setError('');
     try {
-      const data = await fetchUserPlaces();
+      const data = await getAdminPlaces();
       setPlaces(Array.isArray(data) ? data : []);
     } catch (err) {
       setError(err?.message || 'Error cargando sitios');
