@@ -25,7 +25,13 @@ window.scrollTo = vi.fn();
 describe('HomePage', () => {
   const mockOnNavigateColeccion = vi.fn();
 
-  it('renders welcome message for unauthenticated user', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    vi.mocked(api.fetchUpcomingEvents).mockResolvedValue([]);
+    vi.mocked(api.fetchRecommendations).mockResolvedValue([]);
+  });
+
+  it('renders welcome message for unauthenticated user', async () => {
     vi.mocked(useAuth).mockReturnValue({ user: null });
 
     render(
@@ -34,13 +40,15 @@ describe('HomePage', () => {
       </MemoryRouter>
     );
 
-    expect(screen.getByText(/Explora, guarda y personaliza tus rutas ecoturísticas/i)).toBeInTheDocument();
+    expect(await screen.findByText(/Explora, guarda y personaliza tus rutas ecoturísticas/i)).toBeInTheDocument();
+    
+    await waitFor(() => {
+        expect(api.fetchUpcomingEvents).toHaveBeenCalled();
+    });
   });
 
   it('renders welcome message with user name for authenticated user', async () => {
     vi.mocked(useAuth).mockReturnValue({ user: { name: 'Christian', role: 'user' } });
-    vi.mocked(api.fetchUpcomingEvents).mockResolvedValue([]);
-    vi.mocked(api.fetchRecommendations).mockResolvedValue([]);
     vi.mocked(api.api.get).mockResolvedValue({ data: [] });
 
     render(
@@ -49,11 +57,15 @@ describe('HomePage', () => {
       </MemoryRouter>
     );
 
-    expect(screen.getByText(/Hola,/i)).toBeInTheDocument();
-    expect(screen.getByText(/Christian/i)).toBeInTheDocument();
+    expect(await screen.findByText(/Hola,/i)).toBeInTheDocument();
+    expect(await screen.findByText(/Christian/i)).toBeInTheDocument();
+
+    await waitFor(() => {
+        expect(api.fetchUpcomingEvents).toHaveBeenCalled();
+    });
   });
 
-  it('renders the "Explorar colección" button', () => {
+  it('renders the "Explorar colección" button', async () => {
     vi.mocked(useAuth).mockReturnValue({ user: null });
 
     render(
@@ -62,6 +74,10 @@ describe('HomePage', () => {
       </MemoryRouter>
     );
 
-    expect(screen.getByRole('button', { name: /Explorar colección/i })).toBeInTheDocument();
+    expect(await screen.findByRole('button', { name: /Explorar colección/i })).toBeInTheDocument();
+
+    await waitFor(() => {
+        expect(api.fetchUpcomingEvents).toHaveBeenCalled();
+    });
   });
 });
