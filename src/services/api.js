@@ -186,3 +186,296 @@ export async function fetchRecommendations() {
     throw error.response?.data || { message: 'Error obteniendo recomendaciones' };
   }
 }
+// ============ PREFERENCIAS ============
+/**
+ * Obtener catálogo completo de preferencias
+ */
+export async function fetchPreferencesOptions() {
+  try {
+    const { data } = await api.get('/api/preferences');
+    return data;
+  } catch (error) {
+    throw error.response?.data || { message: 'Error obteniendo preferencias' };
+  }
+}
+
+/**
+ * Obtener preferencias del usuario actual (requiere autenticación)
+ */
+export async function fetchUserPreferences() {
+  try {
+    const { data } = await api.get('/api/user/preferences');
+    return data;
+  } catch (error) {
+    throw error.response?.data || { message: 'Error obteniendo preferencias del usuario' };
+  }
+}
+
+/**
+ * Actualizar preferencias del usuario (requiere autenticación)
+ * @param {array} preferenceIds - Array de IDs de preferencias [1, 3, 5, ...]
+ */
+export async function updateUserPreferences(preferenceIds) {
+  try {
+    const { data } = await api.post('/api/user/preferences', {
+      preferences: preferenceIds,
+    });
+    return data;
+  } catch (error) {
+    throw error.response?.data || { message: 'Error actualizando preferencias' };
+  }
+}
+
+/**
+ * Obtener si es primera vez que el usuario configura preferencias
+ */
+export async function checkFirstTimePreferences() {
+  try {
+    const { data } = await api.get('/api/user/first-time-preferences');
+    return data.first_time;
+  } catch (error) {
+    return false;
+  }
+}
+// ============ VISITAS Y NOTIFICACIONES ============
+/**
+ * Registrar visita a un lugar
+ */
+export async function logPlaceVisit(placeId) {
+  try {
+    const { data } = await api.post(`/api/places/${placeId}/visit`);
+    return data;
+  } catch (error) {
+    throw error.response?.data || { message: 'Error registrando visita' };
+  }
+}
+
+/**
+ * Marcar notificación como leída
+ */
+export async function markNotificationRead(notificationId) {
+  try {
+    const { data } = await api.post(`/api/notifications/${notificationId}/read`);
+    return data;
+  } catch (error) {
+    throw error.response?.data || { message: 'Error al marcar notificacion' };
+  }
+}
+
+// ============ RESEÑAS Y COMENTARIOS ============
+/**
+ * Crear reseña en un sitio (requiere autenticación)
+ * @param {number} placeId - ID del sitio
+ * @param {number} rating - Calificación (1-5)
+ * @param {string} comment - Comentario
+ */
+export async function createReview(placeId, rating, comment) {
+  try {
+    const { data } = await api.post(`/api/places/${placeId}/reviews`, {
+      rating,
+      comment,
+    });
+    return data;
+  } catch (error) {
+    throw error.response?.data || { message: 'Error creando reseña' };
+  }
+}
+
+/**
+ * Actualizar una reseña propia
+ */
+export async function updateReview(reviewId, rating, comment) {
+  try {
+    const { data } = await api.put(`/api/reviews/${reviewId}`, { rating, comment });
+    return data;
+  } catch (error) {
+    throw error.response?.data || { message: 'Error actualizando reseña' };
+  }
+}
+
+/**
+ * Eliminar reseña propia (o como admin)
+ * @param {number} reviewId - ID de la reseña
+ */
+export async function deleteReview(reviewId) {
+  try {
+    const { data } = await api.delete(`/api/reviews/${reviewId}`);
+    return data;
+  } catch (error) {
+    throw error.response?.data || { message: 'Error eliminando reseña' };
+  }
+}
+
+/**
+ * Reaccionar a una reseña (like/dislike)
+ * @param {number} reviewId - ID de la reseña
+ * @param {string} type - 'like' o 'dislike'
+ */
+export async function reactToReview(reviewId, type) {
+  try {
+    const { data } = await api.post(`/api/reviews/${reviewId}/react`, { type });
+    return data;
+  } catch (error) {
+    throw error.response?.data || { message: 'Error agregando reacción' };
+  }
+}
+
+// ============ MODERACIÓN OPERADOR ============
+export async function restrictReviewAsOperator(reviewId, reason = null) {
+  try {
+    const { data } = await api.post(`/api/operator/reviews/${reviewId}/restrict`, {});
+    return data;
+  } catch (error) {
+    throw error.response?.data || { message: 'Error restringiendo reseña' };
+  }
+}
+
+export async function unrestrictReviewAsOperator(reviewId) {
+  try {
+    const { data } = await api.post(`/api/operator/reviews/${reviewId}/unrestrict`);
+    return data;
+  } catch (error) {
+    throw error.response?.data || { message: 'Error desrestringiendo reseña' };
+  }
+}
+
+/* Obtener estadísticas consolidadas del operador (requiere autenticación) */
+export async function fetchOperatorStats() {
+  try {
+    const { data } = await api.get('/api/operator/stats');
+    return data;
+  } catch (error) {
+    throw error.response?.data || { message: 'Error cargando estadisticas' };
+  }
+}
+
+// ============ PERFIL DE USUARIO ============
+
+export async function fetchProfile() {
+  try {
+    const { data } = await api.get('/api/profile');
+    return data;
+  } catch (error) {
+    throw error.response?.data || { message: 'Error obteniendo perfil' };
+  }
+}
+
+export async function updateProfile(payload) {
+  try {
+    await initializeCsrfToken();
+    const { data } = await api.put('/api/profile', payload);
+    return data.user;
+  } catch (error) {
+    throw error.response?.data || { message: 'Error actualizando perfil' };
+  }
+}
+
+export async function changePassword(current_password, password, password_confirmation) {
+  try {
+    await initializeCsrfToken();
+    const { data } = await api.post('/api/profile/password', {
+      current_password, password, password_confirmation,
+    });
+    return data.message;
+  } catch (error) {
+    throw error.response?.data || { message: 'Error actualizando contraseña' };
+  }
+}
+
+// Envío Multipart para el Archivo de Foto
+export async function uploadAvatar(file) {
+  const formData = new FormData();
+  formData.append('avatar', file); // Creación directa de formato de archivo
+
+  try {
+    await initializeCsrfToken();
+    const { data } = await api.post('/api/profile/avatar', formData);
+    return data;
+  } catch (error) {
+    throw error.response?.data || { message: 'Error subiendo foto' };
+  }
+}
+
+export async function deleteAvatar() {
+  try {
+    await initializeCsrfToken();
+    const { data } = await api.delete('/api/profile/avatar');
+    return data;
+  } catch (error) {
+    throw error.response?.data || { message: 'Error eliminando foto' };
+  }
+}
+
+export async function deleteAccount(current_password) {
+  try {
+    await initializeCsrfToken();
+    const { data } = await api.post('/api/profile/delete', { current_password });
+    return data.message || 'Cuenta eliminada';
+  } catch (error) {
+    throw error.response?.data || { message: 'Error eliminando cuenta' };
+  }
+}
+
+// ============ REPOSITORIO DE FUNCIONES EXTRAVIADAS ============
+export async function fetchPlaces() {
+  try {
+    const { data } = await api.get('/api/places');
+    return data;
+  } catch (error) {
+    throw error.response?.data || { message: 'Error obteniendo sitios' };
+  }
+}
+
+export async function fetchPlace(id) {
+  try {
+    const { data } = await api.get(`/api/places/${id}`);
+    return data;
+  } catch (error) {
+    throw error.response?.data || { message: 'Error obteniendo sitio' };
+  }
+}
+
+export async function fetchNextEvent() {
+  try {
+    const { data } = await api.get('/api/events/next');
+    return data?.event || null;
+  } catch (error) {
+    throw error.response?.data || { message: 'Error obteniendo evento' };
+  }
+}
+
+export async function fetchUpcomingEvents(limit = 5) {
+  try {
+    const { data } = await api.get('/api/events/upcoming', { params: { limit } });
+    return Array.isArray(data?.events) ? data.events : [];
+  } catch (error) {
+    throw error.response?.data || { message: 'Error obteniendo eventos' };
+  }
+}
+
+export async function fetchPublicEvent(eventId) {
+  try {
+    const { data } = await api.get(`/api/events/${eventId}`);
+    return data;
+  } catch (error) {
+    throw error.response?.data || { message: 'No se pudo cargar el evento' };
+  }
+}
+
+export async function fetchUserHistory(limit = 8) {
+  try {
+    const { data } = await api.get('/api/user/history', { params: { limit } });
+    return data;
+  } catch (error) {
+    throw error.response?.data || { message: 'Error obteniendo historial' };
+  }
+}
+
+export async function fetchUserReviews(limit = 8) {
+  try {
+    const { data } = await api.get('/api/user/reviews', { params: { limit } });
+    return data;
+  } catch (error) {
+    throw error.response?.data || { message: 'Error obteniendo comentarios' };
+  }
+}

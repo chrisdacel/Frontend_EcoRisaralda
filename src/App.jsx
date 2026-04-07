@@ -19,8 +19,61 @@ const RegistroOperador2 = lazy(() => import('./RegistroOperador2'));
 const RegistroTurista1 = lazy(() => import('./RegistroTurista1'));
 const RegistroTurista2 = lazy(() => import('./RegistroTurista2'));
 
-// (HU002): Importamos la Colección Ecoturística
+// Lazy loaded pages (HU002: Colección)
 const ColeccionPage = lazy(() => import('./ColeccionPage'));
+
+// Lazy loaded pages (HU003: Preferencias)
+const PreferencesPage = lazy(() => import('./PreferencesPage'));
+
+// HU006: Importamos la Landing Completa del Sitio
+const SitioDetailPage = lazy(() => import('./SitioDetailPage'));
+
+// HU008: Importamos la Página de Favoritos
+const FavoritosPage = lazy(() => import('./FavoritosPage'));
+
+// HU009: Panel de Operador y Formulario Creación/Edición
+const OperatorSitesPage = lazy(() => import('./OperatorSitesPage'));
+const CreateSitioPage = lazy(() => import('./CreateSitioPageLeaflet'));
+
+// HU010: Panel de Operador y Formulario Creación/Edición
+const OperatorEventsPage = lazy(() => import('./OperatorEventsPage'));
+const CreateEventPage = lazy(() => import('./CreateEventPage'));
+
+// (US016 Fix): Protectores y Vistas Administrador
+import ProtectedRoute from './components/ProtectedRoute';
+import AdminRoute from './components/AdminRoute';
+import AdminOperatorRoute from './components/AdminOperatorRoute';
+
+// (US013 Fix): Dashboards, Home y Perfiles
+const HomePage = lazy(() => import('./HomePage'));
+const ProfilePageOperador = lazy(() => import('./ProfilePageOperador'));
+const ProfilePageTurista = lazy(() => import('./ProfilePageTurista'));
+
+const AdminDashboardPage = lazy(() => import('./AdminDashboardPage'));
+const AdminUsersPage = lazy(() => import('./AdminUsersPage'));
+const AdminOperatorsPage = lazy(() => import('./AdminOperatorsPage'));
+const AdminProfilePage = lazy(() => import('./AdminProfilePage'));
+const AdminSitesPage = lazy(() => import('./AdminSitesPage'));
+const AdminCommentsPage = lazy(() => import('./AdminCommentsPage'));
+const AdminLabelsPage = lazy(() => import('./AdminLabelsPage'));
+
+// (US006/US009 Fix): Detalles y Formularios
+const EditEventPage = lazy(() => import('./EditEventPage'));
+const EventDetailPage = lazy(() => import('./EventDetailPage'));
+const OperatorCommentsPage = lazy(() => import('./OperatorCommentsPage'));
+const HistorialPage = lazy(() => import('./HistorialPage'));
+const OfertaPage = lazy(() => import('./OfertaPage'));
+const NotificationsPage = lazy(() => import('./NotificationsPage'));
+const SitioPage = lazy(() => import('./SitioPage'));
+const QueOfrecemosPage = lazy(() => import('./QueOfrecemosPage'));
+
+// (US012 Fix): Páginas Estáticas, Legales y Estadísticas
+const PrivacidadPage = lazy(() => import('./PrivacidadPage'));
+const TerminosCondicionesPage = lazy(() => import('./TerminosCondicionesPage'));
+const SobreNosotrosPage = lazy(() => import('./SobreNosotrosPage'));
+const PreguntasFrecuentesPage = lazy(() => import('./PreguntasFrecuentesPage'));
+const OperatorStatsPage = lazy(() => import('./OperatorStatsPage'));
+
 
 // Protector para no dejar entrar al login si ya estás logueado
 const GuestRoute = ({ children }) => {
@@ -29,6 +82,15 @@ const GuestRoute = ({ children }) => {
     if (user.role === 'admin') return <Navigate to="/admin/dashboard" replace />;
     if (user.role === 'operator') return <Navigate to="/operador/home" replace />;
     return <Navigate to="/turista/home" replace />;
+  }
+  return children;
+};
+
+// HU009: Protector exclusivo para Operadores (y Admins)
+const OperatorRoute = ({ children }) => {
+  const { user } = useAuth();
+  if (!user || (user.role !== 'operator' && user.role !== 'admin')) {
+    return <Navigate to="/login" replace />;
   }
   return children;
 };
@@ -108,18 +170,105 @@ function AppRoutes() {
           }
         />
         
-        {/* Rutas adicionales de Roles y Pasos de Registro que traíste */}
+        {/* Rutas adicionales de Roles y Pasos de Registro */}
         <Route path="/roles" element={<RolesPage />} />
         <Route path="/registro-operador-1" element={<RegistroOperador1 />} />
         <Route path="/registro-operador-2" element={<RegistroOperador2 />} />
         <Route path="/registro-turista-1" element={<RegistroTurista1 />} />
         <Route path="/registro-turista-2" element={<RegistroTurista2 />} />
 
-        {/* HU002): Ruta pública para acceder a la colección de sitios */}
         <Route path="/coleccion" element={<ColeccionPage />} />
+        <Route path="/que-ofrecemos" element={<QueOfrecemosPage onNavigateRegister={() => navigate('/register')} />} />
+        
+        {/* === PÁGINAS ESTÁTICAS / LEGALES === */}
+        <Route path="/privacidad" element={<PrivacidadPage onNavigateLogin={() => navigate('/login')} />} />
+        <Route path="/terminos-condiciones" element={<TerminosCondicionesPage onNavigateLogin={() => navigate('/login')} />} />
+        <Route path="/sobre-nosotros" element={<SobreNosotrosPage onNavigateLogin={() => navigate('/login')} />} />
+        <Route path="/preguntas-frecuentes" element={<PreguntasFrecuentesPage onNavigateLogin={() => navigate('/login')} />} />
 
-        {/* Como aún no hemos migrado el HomePage "/", redirigimos a login temporalmente */}
-        <Route path="*" element={<Navigate to="/login" replace />} />
+        {/* Ruta conectada al registro para Preferencias (HU003) */}
+        <Route 
+          path="/preferencias" 
+          element={
+            <PreferencesPage 
+              onNavigateHome={() => navigate('/')}
+              onNavigateLogin={() => navigate('/login')}
+              isFirstTime={true}
+            />
+          } 
+        />
+
+        {/* (HU006): El componente maestro SitioDetailPage gestiona su render según el Rol internamente */}
+        <Route path="/sitio/:id" element={<SitioDetailPage />} />
+        <Route path="/turista/sitio/:id" element={<SitioDetailPage />} />
+        <Route path="/operador/sitio/:id" element={<SitioDetailPage />} />
+        <Route path="/admin/sitio/:id" element={<SitioDetailPage />} />
+        
+        {/* (HU008): Ruta temporal de Favoritos del Turista */}
+        <Route path="/turista/favoritos" element={<FavoritosPage />} />
+
+        {/* (HU009): Rutas Privadas del Operador */}
+        <Route 
+          path="/operador/mis-sitios" 
+          element={
+            <OperatorRoute>
+              <OperatorSitesPage />
+            </OperatorRoute>
+          } 
+        />
+        <Route 
+          path="/crear-sitio" 
+          element={
+            <OperatorRoute>
+              <CreateSitioPage />
+            </OperatorRoute>
+          } 
+        />
+        <Route 
+          path="/operador/sitio/:id/editar" 
+          element={
+            <OperatorRoute>
+              <CreateSitioPage />
+            </OperatorRoute>
+          } 
+        />
+          <Route 
+          path="/operador/mis-eventos" 
+          element={<OperatorRoute><OperatorEventsPage /></OperatorRoute>} 
+        />
+        <Route 
+          path="/operador/sitio/:id/evento/crear" 
+          element={<OperatorRoute><CreateEventPage /></OperatorRoute>} 
+        />
+
+        {/* === RUTAS TURISTA === */}
+        <Route path="/turista/home" element={<HomePage onNavigateLogin={() => navigate('/login')} onNavigateRegister={() => navigate('/register')} onNavigateColeccion={() => navigate('/coleccion')} onNavigateOferta={() => navigate('/que-ofrecemos')} onNavigatePrivacidad={() => navigate('/privacidad')} onNavigateSobreNosotros={() => navigate('/sobre-nosotros')} />} />
+        <Route path="/turista/profile" element={<ProtectedRoute><ProfilePageTurista /></ProtectedRoute>} />
+        <Route path="/turista/evento/:id" element={<ProtectedRoute><EventDetailPage /></ProtectedRoute>} />
+        <Route path="/turista/historial" element={<ProtectedRoute><HistorialPage /></ProtectedRoute>} />
+        <Route path="/turista/notificaciones" element={<ProtectedRoute><NotificationsPage /></ProtectedRoute>} />
+
+        {/* === RUTAS OPERADOR (Dashboards y Perfil) === */}
+        <Route path="/operador/home" element={<AdminOperatorRoute><HomePage onNavigateLogin={() => navigate('/login')} onNavigateRegister={() => navigate('/register')} onNavigateColeccion={() => navigate('/coleccion')} onNavigateOferta={() => navigate('/que-ofrecemos')} onNavigatePrivacidad={() => navigate('/privacidad')} onNavigateSobreNosotros={() => navigate('/sobre-nosotros')} /></AdminOperatorRoute>} />
+        <Route path="/operador/profile" element={<ProtectedRoute><ProfilePageOperador /></ProtectedRoute>} />
+        <Route path="/operador/comentarios" element={<AdminOperatorRoute><OperatorCommentsPage /></AdminOperatorRoute>} />
+        <Route path="/operador/evento/:id/editar" element={<AdminOperatorRoute><EditEventPage /></AdminOperatorRoute>} />
+        <Route path="/operador/estadisticas" element={<AdminOperatorRoute><OperatorStatsPage /></AdminOperatorRoute>} />
+
+        {/* === RUTA MAESTRA Y CATCH-ALL === */}
+        <Route path="/" element={<HomePage onNavigateLogin={() => navigate('/login')} onNavigateRegister={() => navigate('/register')} onNavigateColeccion={() => navigate('/coleccion')} onNavigateOferta={() => navigate('/que-ofrecemos')} onNavigatePrivacidad={() => navigate('/privacidad')} onNavigateSobreNosotros={() => navigate('/sobre-nosotros')} />} />
+        <Route path="*" element={<Navigate to="/" replace />} />
+        {/* === RUTAS ADMINISTRADOR (US016 FIXED) === */}
+        <Route path="/admin/dashboard" element={<AdminRoute><AdminDashboardPage /></AdminRoute>} />
+        <Route path="/admin/users" element={<AdminRoute><AdminUsersPage /></AdminRoute>} />
+        <Route path="/admin/operators" element={<AdminRoute><AdminOperatorsPage /></AdminRoute>} />
+        <Route path="/admin/sites" element={<AdminRoute><AdminSitesPage /></AdminRoute>} />
+        <Route path="/admin/sitio/preview" element={<AdminRoute><SitioPage /></AdminRoute>} />
+        <Route path="/admin/comentarios" element={<AdminRoute><AdminCommentsPage /></AdminRoute>} />
+        <Route path="/admin/etiquetas" element={<AdminRoute><AdminLabelsPage /></AdminRoute>} />
+        <Route path="/admin/profile" element={<AdminRoute><AdminProfilePage /></AdminRoute>} />
+        <Route path="/admin/evento/:id/editar" element={<AdminRoute><EditEventPage /></AdminRoute>} />
+
       </Routes>
     </Suspense>
   );
@@ -174,7 +323,6 @@ function ScrollReveal() {
   return null;
 }
 
-// Estructura principal exactamente igual a tu original
 function App() {
   return (
     <AuthProvider>

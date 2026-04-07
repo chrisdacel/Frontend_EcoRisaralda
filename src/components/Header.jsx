@@ -2,6 +2,7 @@ import { Link, NavLink, useNavigate, useLocation } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";
 import { useAuth } from "../context/AuthContext";
 import { fetchNotifications } from "../services/api";
+import NotificationModal from "./NotificationModal";
 
 export default function Header() {
   const { user, logout } = useAuth();
@@ -10,6 +11,7 @@ export default function Header() {
   const [scrollY, setScrollY] = useState(0);
   const [menuOpen, setMenuOpen] = useState(false);
   const [notificationsOpen, setNotificationsOpen] = useState(false);
+  /* Mobile Open */
   const [mobileOpen, setMobileOpen] = useState(false);
   const [notifications, setNotifications] = useState([]);
   const [notificationsLoading, setNotificationsLoading] = useState(false);
@@ -163,13 +165,11 @@ export default function Header() {
     setMobileOpen(false);
   };
 
-  // Siempre fija y visible, color adaptativo en todos los dispositivos
   const isColeccionPage = location.pathname.includes("/coleccion");
   const isMobileOrTablet = typeof window !== 'undefined' && window.innerWidth < 1024;
   const isScrolled = isAuthPage ? false : (scrollY > 20);
   const textColor = isScrolled ? "text-slate-900" : "text-white";
   const secondaryTextColor = isScrolled ? "text-slate-700" : "text-emerald-100/80";
-  const dotColor = isScrolled ? "bg-emerald-500" : "bg-emerald-400";
   const baseLink = (isActive) =>
     `px-3 py-2 text-sm font-medium transition ${isActive ? "text-emerald-500" : isScrolled ? "text-slate-700 hover:text-emerald-500" : "text-emerald-100/80 hover:text-emerald-500"}`;
 
@@ -225,7 +225,6 @@ export default function Header() {
   };
   const unreadCount = notifications.filter((item) => !item.read_at).length;
 
-  // Siempre fixed y visible en móvil/tablet, color adaptativo en todos los dispositivos
   const headerBg = `fixed top-0 left-0 right-0 z-[9999] w-full transition-all duration-[1200ms] ease-in-out ${
     mobileOpen
       ? "bg-transparent"
@@ -238,7 +237,6 @@ export default function Header() {
     <>
     <header className={headerBg}>
       <div className="relative z-[70] mx-auto flex h-14 max-w-7xl items-center justify-between px-4 md:px-6">
-        {/* Logo izquierda */}
         <Link to="/" className={`inline-flex items-center gap-2 flex-shrink-0 transition-all duration-500 ease-in-out ${mobileOpen ? '-translate-y-8 opacity-0 pointer-events-none' : 'translate-y-0 opacity-100'}`}>
           <img loading="lazy"
             src="/images/Pagina_inicio/nature-svgrepo-com.svg"
@@ -262,7 +260,6 @@ export default function Header() {
           </div>
         </Link>
 
-        {/* Nav centro */}
         <nav
           className="hidden xl:flex justify-center gap-6 mx-auto">
           {navLinks.map((link) => (
@@ -276,9 +273,7 @@ export default function Header() {
           ))}
         </nav>
 
-        {/* Botones derecha */}
         <div className="flex items-center gap-3 md:gap-2 flex-shrink-0">
-          {/* Avatar exclusivo para móvil y tablet */}
           {user && (
             <button
               type="button"
@@ -346,78 +341,19 @@ export default function Header() {
                     )}
                   </button>
                   {notificationsOpen && (
-                    <div className="absolute left-1/2 -translate-x-1/2 mt-2 w-72 rounded-xl overflow-hidden bg-white text-slate-800 shadow-lg ring-1 ring-slate-200/60 dropdown-open animate-fadeInDown
-                      md:left-auto md:right-0 md:translate-x-0">
-                      <div className="px-4 py-3 text-xs font-semibold uppercase tracking-wide text-slate-500">
-                        Notificaciones
-                      </div>
-                      {notificationsLoading && (
-                        <div className="px-4 pb-3 text-sm text-slate-600">
-                          Cargando...
-                        </div>
-                      )}
-                      {!notificationsLoading && notificationsError && (
-                        <div className="px-4 pb-3 text-sm text-rose-600">
-                          {notificationsError}
-                        </div>
-                      )}
-                      {!notificationsLoading &&
-                        !notificationsError &&
-                        notifications.length === 0 && (
-                          <div className="px-4 pb-3 text-sm text-slate-600">
-                            Sin novedades por ahora.
-                          </div>
-                        )}
-                      {!notificationsLoading &&
-                        !notificationsError &&
-                        notifications.length > 0 && (
-                          <div className="px-2 pb-2">
-                            {notifications.map((item) => (
-                              <button
-                                key={item.id}
-                                type="button"
-                                onClick={() => {
-                                  setNotificationsOpen(false);
-                                  const suffix = `?notification=${item.id}`;
-                                  if (item.target_type === "event") {
-                                    navigate(
-                                      `/turista/evento/${item.target_id}${suffix}`,
-                                    );
-                                    return;
-                                  }
-                                  navigate(
-                                    `/turista/sitio/${item.target_id}${suffix}`,
-                                  );
-                                }}
-                                className="w-full rounded-lg px-2 py-2 text-left text-sm transition hover:bg-slate-100"
-                              >
-                                <p className="text-[11px] font-semibold uppercase tracking-wide text-emerald-600">
-                                  {formatNotificationDate(item.created_at)}
-                                </p>
-                                <p className="truncate text-slate-800">
-                                  {item.title || item.place_name || item.name}
-                                </p>
-                                {item.preview && (
-                                  <p className="mt-1 line-clamp-2 text-xs text-slate-500">
-                                    {item.preview}
-                                  </p>
-                                )}
-                              </button>
-                            ))}
-                          </div>
-                        )}
-                      <button
-                        type="button"
-                        onClick={goNotifications}
-                        className="w-full border-t border-slate-200 px-4 py-2 text-sm font-semibold text-emerald-700 hover:bg-emerald-50"
-                      >
-                        Ver todas
-                      </button>
-                    </div>
+                    <NotificationModal 
+                      notifications={notifications}
+                      notificationsLoading={notificationsLoading}
+                      notificationsError={notificationsError}
+                      setNotificationsOpen={setNotificationsOpen}
+                      formatNotificationDate={formatNotificationDate}
+                      navigate={navigate}
+                      goNotifications={goNotifications}
+                    />
                   )}
                 </div>
               )}
-              {/* Dropdown para todos los usuarios */}
+              {/* Dropdown Usuario */}
               <div className="relative">
                 <button
                   onClick={() => setMenuOpen((v) => !v)}
@@ -451,85 +387,51 @@ export default function Header() {
                     stroke="currentColor"
                     viewBox="0 0 24 24"
                   >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M19 9l-7 7-7-7"
-                    />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                   </svg>
                 </button>
                 {menuOpen && (
-                  <div
-                    className={`absolute right-0 mt-2 ${dropdownWidth} rounded-xl overflow-hidden bg-white text-slate-800 shadow-lg ring-1 ring-slate-200/60 dropdown-open`}
-                  >
-                    <button
-                      onClick={goProfile}
-                      className="w-full px-4 py-2 text-left text-sm hover:bg-slate-100 hover:text-emerald-500 transition-colors first:rounded-t-xl last:rounded-b-xl"
-                    >
+                  <div className={`absolute right-0 mt-2 ${dropdownWidth} rounded-xl overflow-hidden bg-white text-slate-800 shadow-lg ring-1 ring-slate-200/60 dropdown-open`}>
+                    <button onClick={goProfile} className="w-full px-4 py-2 text-left text-sm hover:bg-slate-100 hover:text-emerald-500 transition-colors first:rounded-t-xl last:rounded-b-xl">
                       Perfil
                     </button>
                     {isTourist && (
-                      <button
-                        onClick={goFavoritos}
-                        className="w-full px-4 py-2 text-left text-sm hover:bg-slate-100 hover:text-emerald-500 transition-colors first:rounded-t-xl last:rounded-b-xl"
-                      >
+                      <button onClick={goFavoritos} className="w-full px-4 py-2 text-left text-sm hover:bg-slate-100 hover:text-emerald-500 transition-colors first:rounded-t-xl last:rounded-b-xl">
                         Favoritos
                       </button>
                     )}
                     {isTourist && (
-                      <button
-                        onClick={goPreferencias}
-                        className="w-full px-4 py-2 text-left text-sm hover:bg-slate-100 hover:text-emerald-500 transition-colors first:rounded-t-xl last:rounded-b-xl"
-                      >
+                      <button onClick={goPreferencias} className="w-full px-4 py-2 text-left text-sm hover:bg-slate-100 hover:text-emerald-500 transition-colors first:rounded-t-xl last:rounded-b-xl">
                         Preferencias
                       </button>
                     )}
                     {isTourist && (
-                      <button
-                        onClick={goHistorial}
-                        className="w-full px-4 py-2 text-left text-sm hover:bg-slate-100 hover:text-emerald-500 transition-colors first:rounded-t-xl last:rounded-b-xl"
-                      >
+                      <button onClick={goHistorial} className="w-full px-4 py-2 text-left text-sm hover:bg-slate-100 hover:text-emerald-500 transition-colors first:rounded-t-xl last:rounded-b-xl">
                         Historial
                       </button>
                     )}
                     {isTourist && (
-                      <button
-                        onClick={goNotifications}
-                        className="w-full px-4 py-2 text-left text-sm hover:bg-slate-100 hover:text-emerald-500 transition-colors first:rounded-t-xl last:rounded-b-xl"
-                      >
+                      <button onClick={goNotifications} className="w-full px-4 py-2 text-left text-sm hover:bg-slate-100 hover:text-emerald-500 transition-colors first:rounded-t-xl last:rounded-b-xl">
                         Notificaciones
                       </button>
                     )}
                     {user.role === "admin" && (
-                      <button
-                        onClick={goAdminPanel}
-                        className="w-full px-4 py-2 text-left text-sm hover:bg-slate-100 hover:text-emerald-500 transition-colors first:rounded-t-xl last:rounded-b-xl"
-                      >
+                      <button onClick={goAdminPanel} className="w-full px-4 py-2 text-left text-sm hover:bg-slate-100 hover:text-emerald-500 transition-colors first:rounded-t-xl last:rounded-b-xl">
                         Panel de Administración
                       </button>
                     )}
                     {user.role === "operator" && (
-                      <button
-                        onClick={goOperatorSites}
-                        className="w-full px-4 py-2 text-left text-sm hover:bg-slate-100 hover:text-emerald-500 transition-colors first:rounded-t-xl last:rounded-b-xl"
-                      >
+                      <button onClick={goOperatorSites} className="w-full px-4 py-2 text-left text-sm hover:bg-slate-100 hover:text-emerald-500 transition-colors first:rounded-t-xl last:rounded-b-xl">
                         Gestionar mis sitios
                       </button>
                     )}
                     {user.role === "operator" && (
-                      <button
-                        onClick={goOperatorEvents}
-                        className="w-full px-4 py-2 text-left text-sm hover:bg-slate-100 hover:text-emerald-500 transition-colors first:rounded-t-xl last:rounded-b-xl"
-                      >
+                      <button onClick={goOperatorEvents} className="w-full px-4 py-2 text-left text-sm hover:bg-slate-100 hover:text-emerald-500 transition-colors first:rounded-t-xl last:rounded-b-xl">
                         Gestionar mis eventos
                       </button>
                     )}
                     {user.role === "operator" && (
-                      <button
-                        onClick={goOperatorStats}
-                        className="w-full px-4 py-2 text-left text-sm hover:bg-slate-100 hover:text-emerald-500 transition-colors first:rounded-t-xl last:rounded-b-xl"
-                      >
+                      <button onClick={goOperatorStats} className="w-full px-4 py-2 text-left text-sm hover:bg-slate-100 hover:text-emerald-500 transition-colors first:rounded-t-xl last:rounded-b-xl">
                         Estadisticas
                       </button>
                     )}
@@ -537,7 +439,6 @@ export default function Header() {
                 )}
               </div>
 
-              {/* Preferencias removed */}
               <button
                 onClick={handleLogout}
                 className="hidden xl:inline-flex items-center rounded-full bg-emerald-500 px-3 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-emerald-600"
@@ -575,8 +476,7 @@ export default function Header() {
           mobileOpen ? "translate-y-0" : "-translate-y-full pointer-events-none"
         }`}
       >
-        <div className="h-24 flex-shrink-0" /> {/* Spacer for header / X button */}
-
+        <div className="h-24 flex-shrink-0" />
         <div className="flex flex-col px-8 pb-12 items-center">
           <nav className="flex flex-col items-center gap-6 text-center">
             {navLinks.map((link, idx) => (
@@ -606,109 +506,35 @@ export default function Header() {
           >
             {user ? (
               <div className="flex flex-col items-center gap-5 text-center">
-                <button
-                  type="button"
-                  onClick={() => {
-                    closeMobile();
-                    goProfile();
-                  }}
-                  className="text-center text-lg font-medium text-slate-600 hover:text-emerald-500 transition-colors"
-                >
+                <button type="button" onClick={() => { closeMobile(); goProfile(); }} className="text-center text-lg font-medium text-slate-600 hover:text-emerald-500 transition-colors">
                   Perfil
                 </button>
                 {isTourist && (
                   <>
-                    <button
-                      type="button"
-                      onClick={() => { closeMobile(); goFavoritos(); }}
-                      className="text-center text-lg font-medium text-slate-600 hover:text-emerald-500 transition-colors"
-                    >
-                      Favoritos
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => { closeMobile(); goPreferencias(); }}
-                      className="text-center text-lg font-medium text-slate-600 hover:text-emerald-500 transition-colors"
-                    >
-                      Preferencias
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => { closeMobile(); goHistorial(); }}
-                      className="text-center text-lg font-medium text-slate-600 hover:text-emerald-500 transition-colors"
-                    >
-                      Historial
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => { closeMobile(); goNotifications(); }}
-                      className="text-center text-lg font-medium text-slate-600 hover:text-emerald-500 transition-colors"
-                    >
-                      Notificaciones
-                    </button>
+                    <button type="button" onClick={() => { closeMobile(); goFavoritos(); }} className="text-center text-lg font-medium text-slate-600 hover:text-emerald-500 transition-colors">Favoritos</button>
+                    <button type="button" onClick={() => { closeMobile(); goPreferencias(); }} className="text-center text-lg font-medium text-slate-600 hover:text-emerald-500 transition-colors">Preferencias</button>
+                    <button type="button" onClick={() => { closeMobile(); goHistorial(); }} className="text-center text-lg font-medium text-slate-600 hover:text-emerald-500 transition-colors">Historial</button>
+                    <button type="button" onClick={() => { closeMobile(); goNotifications(); }} className="text-center text-lg font-medium text-slate-600 hover:text-emerald-500 transition-colors">Notificaciones</button>
                   </>
                 )}
                 {user.role === "admin" && (
-                  <button
-                    type="button"
-                    onClick={() => { closeMobile(); goAdminPanel(); }}
-                    className="text-center text-lg font-medium text-slate-600 hover:text-emerald-500 transition-colors"
-                  >
-                    Panel de Administración
-                  </button>
+                  <button type="button" onClick={() => { closeMobile(); goAdminPanel(); }} className="text-center text-lg font-medium text-slate-600 hover:text-emerald-500 transition-colors">Panel de Administración</button>
                 )}
                 {user.role === "operator" && (
                   <>
-                    <button
-                      type="button"
-                      onClick={() => { closeMobile(); goOperatorSites(); }}
-                      className="text-center text-lg font-medium text-slate-600 hover:text-emerald-500 transition-colors"
-                    >
-                      Gestionar mis sitios
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => { closeMobile(); goOperatorEvents(); }}
-                      className="text-center text-lg font-medium text-slate-600 hover:text-emerald-500 transition-colors"
-                    >
-                      Gestionar mis eventos
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => { closeMobile(); goOperatorStats(); }}
-                      className="text-center text-lg font-medium text-slate-600 hover:text-emerald-500 transition-colors"
-                    >
-                      Estadísticas
-                    </button>
+                    <button type="button" onClick={() => { closeMobile(); goOperatorSites(); }} className="text-center text-lg font-medium text-slate-600 hover:text-emerald-500 transition-colors">Gestionar mis sitios</button>
+                    <button type="button" onClick={() => { closeMobile(); goOperatorEvents(); }} className="text-center text-lg font-medium text-slate-600 hover:text-emerald-500 transition-colors">Gestionar mis eventos</button>
+                    <button type="button" onClick={() => { closeMobile(); goOperatorStats(); }} className="text-center text-lg font-medium text-slate-600 hover:text-emerald-500 transition-colors">Estadísticas</button>
                   </>
                 )}
-                <button
-                  type="button"
-                  onClick={() => {
-                    closeMobile();
-                    handleLogout();
-                  }}
-                  className="text-center text-xl font-bold text-emerald-600 border-b-2 border-emerald-500 pb-1 mt-4 hover:text-emerald-500 hover:border-emerald-400 transition-colors"
-                >
+                <button type="button" onClick={() => { closeMobile(); handleLogout(); }} className="text-center text-xl font-bold text-emerald-600 border-b-2 border-emerald-500 pb-1 mt-4 hover:text-emerald-500 hover:border-emerald-400 transition-colors">
                   Cerrar sesión
                 </button>
               </div>
             ) : (
               <div className="flex flex-col items-center gap-6 pt-2 text-center">
-                <Link
-                  to="/login"
-                  onClick={closeMobile}
-                  className="text-center text-xl font-medium text-slate-600 hover:text-emerald-500 transition-colors"
-                >
-                  Iniciar sesión
-                </Link>
-                <Link
-                  to="/register"
-                  onClick={closeMobile}
-                  className="text-center text-xl font-bold text-emerald-600 border-b-2 border-emerald-500 pb-1 hover:text-emerald-500 hover:border-emerald-400 transition-colors"
-                >
-                  Crear cuenta
-                </Link>
+                <Link to="/login" onClick={closeMobile} className="text-center text-xl font-medium text-slate-600 hover:text-emerald-500 transition-colors">Iniciar sesión</Link>
+                <Link to="/register" onClick={closeMobile} className="text-center text-xl font-bold text-emerald-600 border-b-2 border-emerald-500 pb-1 hover:text-emerald-500 hover:border-emerald-400 transition-colors">Crear cuenta</Link>
               </div>
             )}
           </div>
