@@ -67,6 +67,13 @@ const NotificationsPage = lazy(() => import('./NotificationsPage'));
 const SitioPage = lazy(() => import('./SitioPage'));
 const QueOfrecemosPage = lazy(() => import('./QueOfrecemosPage'));
 
+// (US012 Fix): Páginas Estáticas, Legales y Estadísticas
+const PrivacidadPage = lazy(() => import('./PrivacidadPage'));
+const TerminosCondicionesPage = lazy(() => import('./TerminosCondicionesPage'));
+const SobreNosotrosPage = lazy(() => import('./SobreNosotrosPage'));
+const PreguntasFrecuentesPage = lazy(() => import('./PreguntasFrecuentesPage'));
+const OperatorStatsPage = lazy(() => import('./OperatorStatsPage'));
+
 
 // Protector para no dejar entrar al login si ya estás logueado
 const GuestRoute = ({ children }) => {
@@ -172,6 +179,12 @@ function AppRoutes() {
 
         <Route path="/coleccion" element={<ColeccionPage />} />
         <Route path="/que-ofrecemos" element={<QueOfrecemosPage onNavigateRegister={() => navigate('/register')} />} />
+        
+        {/* === PÁGINAS ESTÁTICAS / LEGALES === */}
+        <Route path="/privacidad" element={<PrivacidadPage onNavigateLogin={() => navigate('/login')} />} />
+        <Route path="/terminos-condiciones" element={<TerminosCondicionesPage onNavigateLogin={() => navigate('/login')} />} />
+        <Route path="/sobre-nosotros" element={<SobreNosotrosPage onNavigateLogin={() => navigate('/login')} />} />
+        <Route path="/preguntas-frecuentes" element={<PreguntasFrecuentesPage onNavigateLogin={() => navigate('/login')} />} />
 
         {/* Ruta conectada al registro para Preferencias (HU003) */}
         <Route 
@@ -240,6 +253,7 @@ function AppRoutes() {
         <Route path="/operador/profile" element={<ProtectedRoute><ProfilePageOperador /></ProtectedRoute>} />
         <Route path="/operador/comentarios" element={<AdminOperatorRoute><OperatorCommentsPage /></AdminOperatorRoute>} />
         <Route path="/operador/evento/:id/editar" element={<AdminOperatorRoute><EditEventPage /></AdminOperatorRoute>} />
+        <Route path="/operador/estadisticas" element={<AdminOperatorRoute><OperatorStatsPage /></AdminOperatorRoute>} />
 
         {/* === RUTA MAESTRA Y CATCH-ALL === */}
         <Route path="/" element={<HomePage onNavigateLogin={() => navigate('/login')} onNavigateRegister={() => navigate('/register')} onNavigateColeccion={() => navigate('/coleccion')} onNavigateOferta={() => navigate('/que-ofrecemos')} onNavigatePrivacidad={() => navigate('/privacidad')} onNavigateSobreNosotros={() => navigate('/sobre-nosotros')} />} />
