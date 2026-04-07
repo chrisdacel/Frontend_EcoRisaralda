@@ -57,6 +57,16 @@ const AdminSitesPage = lazy(() => import('./AdminSitesPage'));
 const AdminCommentsPage = lazy(() => import('./AdminCommentsPage'));
 const AdminLabelsPage = lazy(() => import('./AdminLabelsPage'));
 
+// (US006/US009 Fix): Detalles y Formularios
+const EditEventPage = lazy(() => import('./EditEventPage'));
+const EventDetailPage = lazy(() => import('./EventDetailPage'));
+const OperatorCommentsPage = lazy(() => import('./OperatorCommentsPage'));
+const HistorialPage = lazy(() => import('./HistorialPage'));
+const OfertaPage = lazy(() => import('./OfertaPage'));
+const NotificationsPage = lazy(() => import('./NotificationsPage'));
+const SitioPage = lazy(() => import('./SitioPage'));
+const QueOfrecemosPage = lazy(() => import('./QueOfrecemosPage'));
+
 
 // Protector para no dejar entrar al login si ya estás logueado
 const GuestRoute = ({ children }) => {
@@ -161,6 +171,7 @@ function AppRoutes() {
         <Route path="/registro-turista-2" element={<RegistroTurista2 />} />
 
         <Route path="/coleccion" element={<ColeccionPage />} />
+        <Route path="/que-ofrecemos" element={<QueOfrecemosPage onNavigateRegister={() => navigate('/register')} />} />
 
         {/* Ruta conectada al registro para Preferencias (HU003) */}
         <Route 
@@ -220,10 +231,15 @@ function AppRoutes() {
         {/* === RUTAS TURISTA === */}
         <Route path="/turista/home" element={<HomePage onNavigateLogin={() => navigate('/login')} onNavigateRegister={() => navigate('/register')} onNavigateColeccion={() => navigate('/coleccion')} onNavigateOferta={() => navigate('/que-ofrecemos')} onNavigatePrivacidad={() => navigate('/privacidad')} onNavigateSobreNosotros={() => navigate('/sobre-nosotros')} />} />
         <Route path="/turista/profile" element={<ProtectedRoute><ProfilePageTurista /></ProtectedRoute>} />
+        <Route path="/turista/evento/:id" element={<ProtectedRoute><EventDetailPage /></ProtectedRoute>} />
+        <Route path="/turista/historial" element={<ProtectedRoute><HistorialPage /></ProtectedRoute>} />
+        <Route path="/turista/notificaciones" element={<ProtectedRoute><NotificationsPage /></ProtectedRoute>} />
 
         {/* === RUTAS OPERADOR (Dashboards y Perfil) === */}
         <Route path="/operador/home" element={<AdminOperatorRoute><HomePage onNavigateLogin={() => navigate('/login')} onNavigateRegister={() => navigate('/register')} onNavigateColeccion={() => navigate('/coleccion')} onNavigateOferta={() => navigate('/que-ofrecemos')} onNavigatePrivacidad={() => navigate('/privacidad')} onNavigateSobreNosotros={() => navigate('/sobre-nosotros')} /></AdminOperatorRoute>} />
         <Route path="/operador/profile" element={<ProtectedRoute><ProfilePageOperador /></ProtectedRoute>} />
+        <Route path="/operador/comentarios" element={<AdminOperatorRoute><OperatorCommentsPage /></AdminOperatorRoute>} />
+        <Route path="/operador/evento/:id/editar" element={<AdminOperatorRoute><EditEventPage /></AdminOperatorRoute>} />
 
         {/* === RUTA MAESTRA Y CATCH-ALL === */}
         <Route path="/" element={<HomePage onNavigateLogin={() => navigate('/login')} onNavigateRegister={() => navigate('/register')} onNavigateColeccion={() => navigate('/coleccion')} onNavigateOferta={() => navigate('/que-ofrecemos')} onNavigatePrivacidad={() => navigate('/privacidad')} onNavigateSobreNosotros={() => navigate('/sobre-nosotros')} />} />
@@ -233,9 +249,11 @@ function AppRoutes() {
         <Route path="/admin/users" element={<AdminRoute><AdminUsersPage /></AdminRoute>} />
         <Route path="/admin/operators" element={<AdminRoute><AdminOperatorsPage /></AdminRoute>} />
         <Route path="/admin/sites" element={<AdminRoute><AdminSitesPage /></AdminRoute>} />
+        <Route path="/admin/sitio/preview" element={<AdminRoute><SitioPage /></AdminRoute>} />
         <Route path="/admin/comentarios" element={<AdminRoute><AdminCommentsPage /></AdminRoute>} />
         <Route path="/admin/etiquetas" element={<AdminRoute><AdminLabelsPage /></AdminRoute>} />
         <Route path="/admin/profile" element={<AdminRoute><AdminProfilePage /></AdminRoute>} />
+        <Route path="/admin/evento/:id/editar" element={<AdminRoute><EditEventPage /></AdminRoute>} />
 
       </Routes>
     </Suspense>
