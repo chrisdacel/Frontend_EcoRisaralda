@@ -44,6 +44,11 @@ import ProtectedRoute from './components/ProtectedRoute';
 import AdminRoute from './components/AdminRoute';
 import AdminOperatorRoute from './components/AdminOperatorRoute';
 
+// (US013 Fix): Dashboards, Home y Perfiles
+const HomePage = lazy(() => import('./HomePage'));
+const ProfilePageOperador = lazy(() => import('./ProfilePageOperador'));
+const ProfilePageTurista = lazy(() => import('./ProfilePageTurista'));
+
 const AdminDashboardPage = lazy(() => import('./AdminDashboardPage'));
 const AdminUsersPage = lazy(() => import('./AdminUsersPage'));
 const AdminOperatorsPage = lazy(() => import('./AdminOperatorsPage'));
@@ -212,8 +217,17 @@ function AppRoutes() {
           element={<OperatorRoute><CreateEventPage /></OperatorRoute>} 
         />
 
-        {/* Como aún no hemos migrado el HomePage "/", redirigimos a login temporalmente */}
-        <Route path="*" element={<Navigate to="/login" replace />} />
+        {/* === RUTAS TURISTA === */}
+        <Route path="/turista/home" element={<HomePage onNavigateLogin={() => navigate('/login')} onNavigateRegister={() => navigate('/register')} onNavigateColeccion={() => navigate('/coleccion')} onNavigateOferta={() => navigate('/que-ofrecemos')} onNavigatePrivacidad={() => navigate('/privacidad')} onNavigateSobreNosotros={() => navigate('/sobre-nosotros')} />} />
+        <Route path="/turista/profile" element={<ProtectedRoute><ProfilePageTurista /></ProtectedRoute>} />
+
+        {/* === RUTAS OPERADOR (Dashboards y Perfil) === */}
+        <Route path="/operador/home" element={<AdminOperatorRoute><HomePage onNavigateLogin={() => navigate('/login')} onNavigateRegister={() => navigate('/register')} onNavigateColeccion={() => navigate('/coleccion')} onNavigateOferta={() => navigate('/que-ofrecemos')} onNavigatePrivacidad={() => navigate('/privacidad')} onNavigateSobreNosotros={() => navigate('/sobre-nosotros')} /></AdminOperatorRoute>} />
+        <Route path="/operador/profile" element={<ProtectedRoute><ProfilePageOperador /></ProtectedRoute>} />
+
+        {/* === RUTA MAESTRA Y CATCH-ALL === */}
+        <Route path="/" element={<HomePage onNavigateLogin={() => navigate('/login')} onNavigateRegister={() => navigate('/register')} onNavigateColeccion={() => navigate('/coleccion')} onNavigateOferta={() => navigate('/que-ofrecemos')} onNavigatePrivacidad={() => navigate('/privacidad')} onNavigateSobreNosotros={() => navigate('/sobre-nosotros')} />} />
+        <Route path="*" element={<Navigate to="/" replace />} />
         {/* === RUTAS ADMINISTRADOR (US016 FIXED) === */}
         <Route path="/admin/dashboard" element={<AdminRoute><AdminDashboardPage /></AdminRoute>} />
         <Route path="/admin/users" element={<AdminRoute><AdminUsersPage /></AdminRoute>} />
