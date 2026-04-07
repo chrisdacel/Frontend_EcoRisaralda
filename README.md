@@ -4,4 +4,4 @@
 
 Puedes consultar la documentación completa del proyecto Conexion EcoRisaralda en la siguiente wiki:
 
-[Ver Wiki del Proyecto](https://github.com/chrisdacel/Backend_EcoRisaralda.wiki.git)
+[Ver Wiki del Proyecto](https://github.com/chrisdacel/Backend_EcoRisaralda/wiki)
