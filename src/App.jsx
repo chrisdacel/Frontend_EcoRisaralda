@@ -39,6 +39,18 @@ const CreateSitioPage = lazy(() => import('./CreateSitioPageLeaflet'));
 const OperatorEventsPage = lazy(() => import('./OperatorEventsPage'));
 const CreateEventPage = lazy(() => import('./CreateEventPage'));
 
+// (US016 Fix): Protectores y Vistas Administrador
+import ProtectedRoute from './components/ProtectedRoute';
+import AdminRoute from './components/AdminRoute';
+import AdminOperatorRoute from './components/AdminOperatorRoute';
+
+const AdminDashboardPage = lazy(() => import('./AdminDashboardPage'));
+const AdminUsersPage = lazy(() => import('./AdminUsersPage'));
+const AdminOperatorsPage = lazy(() => import('./AdminOperatorsPage'));
+const AdminProfilePage = lazy(() => import('./AdminProfilePage'));
+const AdminSitesPage = lazy(() => import('./AdminSitesPage'));
+const AdminCommentsPage = lazy(() => import('./AdminCommentsPage'));
+const AdminLabelsPage = lazy(() => import('./AdminLabelsPage'));
 
 
 // Protector para no dejar entrar al login si ya estás logueado
@@ -202,6 +214,15 @@ function AppRoutes() {
 
         {/* Como aún no hemos migrado el HomePage "/", redirigimos a login temporalmente */}
         <Route path="*" element={<Navigate to="/login" replace />} />
+        {/* === RUTAS ADMINISTRADOR (US016 FIXED) === */}
+        <Route path="/admin/dashboard" element={<AdminRoute><AdminDashboardPage /></AdminRoute>} />
+        <Route path="/admin/users" element={<AdminRoute><AdminUsersPage /></AdminRoute>} />
+        <Route path="/admin/operators" element={<AdminRoute><AdminOperatorsPage /></AdminRoute>} />
+        <Route path="/admin/sites" element={<AdminRoute><AdminSitesPage /></AdminRoute>} />
+        <Route path="/admin/comentarios" element={<AdminRoute><AdminCommentsPage /></AdminRoute>} />
+        <Route path="/admin/etiquetas" element={<AdminRoute><AdminLabelsPage /></AdminRoute>} />
+        <Route path="/admin/profile" element={<AdminRoute><AdminProfilePage /></AdminRoute>} />
+
       </Routes>
     </Suspense>
   );
